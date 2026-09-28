@@ -8,7 +8,7 @@
 
 Prabhat AI is being built as a 28-day full-stack AI project.
 
-**Current Progress:** 2/28 days completed — 7.14%
+**Current Progress:** 4/28 days completed — **14.29%**
 
 ---
 
@@ -18,55 +18,62 @@ The goal of Prabhat AI is to build a personal AI agent that can represent my pro
 
 It will eventually be able to answer questions such as:
 
-- Who am I?
-- What technologies do I know?
-- What am I currently learning?
-- What projects have I built?
-- What technologies were used in my projects?
-- What is my development experience?
-- What are my current learning goals?
-- What work have I completed?
-- Questions about my portfolio and professional background
+* Who am I?
+* What technologies do I know?
+* What am I currently learning?
+* What projects have I built?
+* What technologies were used in my projects?
+* What is my development experience?
+* What are my current learning goals?
+* What work have I completed?
+* Questions about my portfolio and professional background
 
-The agent will use my own structured knowledge and a **RAG (Retrieval-Augmented Generation)** pipeline to provide context-aware responses.
+The agent will eventually use my own structured knowledge and a **RAG (Retrieval-Augmented Generation)** pipeline to provide context-aware responses.
 
 ---
 
 ## ✨ Planned Features
 
 ### 👤 Personal Profile
-- Career background
-- Technical skills
-- Education
-- Learning journey
-- Professional experience
+
+* Career background
+* Technical skills
+* Education
+* Learning journey
+* Professional experience
 
 ### 💻 Project Knowledge
-- Project descriptions
-- Technologies used
-- Features
-- Development progress
-- Technical decisions
+
+* Project descriptions
+* Technologies used
+* Features
+* Development progress
+* Technical decisions
 
 ### 📚 Learning Knowledge
-- Technologies currently being learned
-- Learning progress
-- Notes and concepts
-- Development roadmap
+
+* Technologies currently being learned
+* Learning progress
+* Notes and concepts
+* Development roadmap
 
 ### 🤖 AI Assistant
-- Natural language conversations
-- Context-aware responses
-- Personal knowledge retrieval
-- AI-powered answers based on my information
+
+* Natural language conversations
+* Context-aware responses
+* Personal knowledge retrieval
+* AI-powered answers based on my information
 
 ### 🔎 RAG Pipeline
-- Knowledge ingestion
-- Document processing
-- Embeddings
-- Vector search
-- Relevant context retrieval
-- AI-generated responses
+
+* Knowledge ingestion
+* Document processing
+* Embeddings
+* Vector search
+* Relevant context retrieval
+* AI-generated responses
+
+> These AI/RAG features are planned for later stages of development.
 
 ---
 
@@ -74,31 +81,31 @@ The agent will use my own structured knowledge and a **RAG (Retrieval-Augmented 
 
 ```text
 User
-  │
-  ▼
+ │
+ ▼
 React Frontend
-  │
-  ▼
+ │
+ ▼
 Express API
-  │
-  ▼
+ │
+ ▼
 Controller
-  │
-  ▼
+ │
+ ▼
 AI Service
-  │
-  ├──► Knowledge Retrieval
-  │
-  ├──► RAG Pipeline
-  │
-  └──► AI Model
-  │
-  ▼
+ │
+ ├──► Knowledge Retrieval
+ │
+ ├──► RAG Pipeline
+ │
+ └──► AI Model
+ │
+ ▼
 Response
-  │
-  ▼
+ │
+ ▼
 User
-````
+```
 
 ---
 
@@ -118,6 +125,11 @@ User
 * TypeScript
 * REST API
 
+### Database
+
+* MongoDB
+* Mongoose
+
 ### AI
 
 * LLM API
@@ -125,9 +137,7 @@ User
 * Retrieval-Augmented Generation (RAG)
 * Vector Database
 
-### Database
-
-* PostgreSQL / MongoDB *(final implementation may evolve during development)*
+> AI technologies are planned and will be implemented in later development stages.
 
 ### Development Tools
 
@@ -142,6 +152,7 @@ User
 
 ```text
 prabhat-ai/
+
 │
 ├── client/
 │   └── # React frontend
@@ -149,9 +160,18 @@ prabhat-ai/
 ├── server/
 │   ├── src/
 │   │   ├── config/
+│   │   │   └── db.ts
+│   │   │
 │   │   ├── controllers/
 │   │   ├── middleware/
+│   │   │
 │   │   ├── models/
+│   │   │   ├── Profile.ts
+│   │   │   ├── Project.ts
+│   │   │   ├── Skill.ts
+│   │   │   ├── Learning.ts
+│   │   │   └── Experience.ts
+│   │   │
 │   │   ├── routes/
 │   │   ├── services/
 │   │   ├── app.ts
@@ -194,15 +214,18 @@ This structure keeps HTTP handling, business logic, database operations, and AI 
 
 ---
 
-## 🚀 Current Implementation
+# 🚀 Current Implementation
 
-### Day 1 — Project Planning ✅
+## Day 1 — Project Planning ✅
 
 * Defined the purpose of Prabhat AI
 * Planned the personal knowledge system
 * Defined the overall project direction
+* Established the 28-day development roadmap
 
-### Day 2 — Backend Setup ✅
+---
+
+## Day 2 — Backend Setup ✅
 
 * Initialized Node.js backend
 * Installed Express
@@ -215,7 +238,7 @@ This structure keeps HTTP handling, business logic, database operations, and AI 
 * Verified production build
 * Added environment-file protection
 
-Health endpoint:
+### Health Endpoint
 
 ```text
 GET /api/health
@@ -232,19 +255,171 @@ Response:
 
 ---
 
-## 📅 28-Day Development Roadmap
+## Day 3 — Frontend Setup ✅
 
-| Day | Focus                      | Status |
-| --- | -------------------------- | ------ |
-| 1   | Project Planning           | ✅      |
-| 2   | Backend Setup              | ✅      |
-| 3   | TBD                        | ⬜      |
-| 4   | TBD                        | ⬜      |
-| 5   | TBD                        | ⬜      |
-| ... | ...                        | ⬜      |
-| 28  | Final Project & Deployment | ⬜      |
+* Set up React + Vite frontend
+* Configured TypeScript
+* Configured Tailwind CSS
+* Created basic chat UI foundation
+* Created chat page structure
+* Created message list structure
+* Created user/AI message structure
+* Added chat input
+* Connected frontend structure with the Prabhat AI project architecture
+* Verified frontend development setup
 
-> The roadmap will be updated as development progresses.
+> The frontend is currently a foundation for the future AI chat interface. AI functionality will be connected in later roadmap stages.
+
+---
+
+## Day 4 — Database Foundation ✅
+
+* Prepared MongoDB database
+* Connected MongoDB to the backend
+* Configured database environment variables
+* Installed and configured Mongoose
+* Created reusable MongoDB connection module
+* Added MongoDB connection error handling
+* Created initial data models
+* Verified database connection
+* Verified TypeScript production build
+* Completed Git checkpoint
+
+### Database Connection
+
+The backend now connects to MongoDB through Mongoose.
+
+```text
+Prabhat AI Backend
+       │
+       ▼
+    Mongoose
+       │
+       ▼
+    MongoDB
+```
+
+### Initial Models
+
+```text
+MongoDB
+│
+├── Profile
+├── Project
+├── Skill
+├── Learning
+└── Experience
+```
+
+### Model Structure
+
+#### Profile
+
+```text
+Profile
+├── name
+├── role
+├── bio
+├── location
+├── email
+└── socialLinks
+```
+
+#### Project
+
+```text
+Project
+├── title
+├── description
+├── technologies
+├── githubUrl
+├── liveUrl
+└── featured
+```
+
+#### Skill
+
+```text
+Skill
+├── name
+├── category
+└── level
+```
+
+#### Learning
+
+```text
+Learning
+├── topic
+├── description
+├── status
+└── progress
+```
+
+#### Experience
+
+```text
+Experience
+├── company
+├── role
+├── description
+├── startDate
+└── endDate
+```
+
+### Database Verification
+
+Development server:
+
+```text
+MongoDB connected successfully
+Prabhat AI server running on port 5000
+```
+
+Production TypeScript build:
+
+```bash
+npm run build
+```
+
+Build completed successfully.
+
+---
+
+# 📅 28-Day Development Roadmap
+
+| Day | Focus                            | Status |
+| --: | -------------------------------- | :----: |
+|   1 | Project Planning                 |    ✅   |
+|   2 | Backend Setup                    |    ✅   |
+|   3 | Frontend Setup                   |    ✅   |
+|   4 | MongoDB + Mongoose + Data Models |    ✅   |
+|   5 | Personal Data                    |    ⬜   |
+|   6 | Knowledge Base                   |    ⬜   |
+|   7 | Data APIs                        |    ⬜   |
+|   8 | Authentication                   |    ⬜   |
+|   9 | Frontend Data Integration        |    ⬜   |
+|  10 | AI Integration                   |    ⬜   |
+|  11 | Chat API                         |    ⬜   |
+|  12 | AI Service                       |    ⬜   |
+|  13 | Prompt Engineering               |    ⬜   |
+|  14 | Chat Interface                   |    ⬜   |
+|  15 | Knowledge Retrieval              |    ⬜   |
+|  16 | RAG Fundamentals                 |    ⬜   |
+|  17 | Document Processing              |    ⬜   |
+|  18 | Embeddings                       |    ⬜   |
+|  19 | Vector Database                  |    ⬜   |
+|  20 | Retrieval Pipeline               |    ⬜   |
+|  21 | RAG Integration                  |    ⬜   |
+|  22 | Context-Aware AI                 |    ⬜   |
+|  23 | Chat Improvements                |    ⬜   |
+|  24 | Testing                          |    ⬜   |
+|  25 | Performance + Cleanup            |    ⬜   |
+|  26 | Deployment                       |    ⬜   |
+|  27 | Portfolio Presentation           |    ⬜   |
+|  28 | Final Project & Deployment       |    ⬜   |
+
+> The roadmap may be refined during implementation, but completed days will reflect only features that have actually been implemented and tested.
 
 ---
 
@@ -258,7 +433,7 @@ Example:
 PORT=5000
 
 # Database
-DATABASE_URL=
+MONGODB_URI=
 
 # AI
 AI_API_KEY=
@@ -278,7 +453,7 @@ AI_API_KEY=
 git clone https://github.com/YOUR_USERNAME/prabhat-ai.git
 ```
 
-### 2. Navigate to the project
+### 2. Navigate to the backend
 
 ```bash
 cd prabhat-ai/server
@@ -306,6 +481,18 @@ Health check:
 
 ```text
 http://localhost:5000/api/health
+```
+
+### Build
+
+```bash
+npm run build
+```
+
+### Start production build
+
+```bash
+npm start
 ```
 
 ---
@@ -353,11 +540,13 @@ Prabhat AI
 
 Day 1  ████████████████████████████████  ✅
 Day 2  ████████████████████████████████  ✅
-Day 3  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
+Day 3  ████████████████████████████████  ✅
+Day 4  ████████████████████████████████  ✅
+Day 5  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
 ...
 Day 28 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
 
-Progress: 2/28 days — 7.14%
+Progress: 4/28 days — 14.29%
 ```
 
 ---
@@ -367,10 +556,3 @@ Progress: 2/28 days — 7.14%
 Build a real personal AI agent that can understand and communicate my professional journey through my own knowledge base.
 
 **Building in public. Learning by building. 🚀**
-
-```
-
-### One change I'd make before pushing
-
-I intentionally used **"planned"** for the AI/RAG/database parts because you're only on **Day 2**. As you actually implement those technologies, we can update the README so your GitHub repository always reflects what you've genuinely built rather than what is merely planned.
-```
