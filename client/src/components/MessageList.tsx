@@ -6,26 +6,11 @@ type Message = {
   content: string
 }
 
-const messages: Message[] = [
-  {
-    id: 1,
-    role: 'ai',
-    content: 'Hello! I am Prabhat AI, your personal AI assistant.',
-  },
-  {
-    id: 2,
-    role: 'user',
-    content: 'Tell me about yourself.',
-  },
-  {
-    id: 3,
-    role: 'ai',
-    content:
-      'I am designed to know about your background, skills, projects, and learning journey.',
-  },
-]
+type MessageListProps = {
+  messages: Message[]
+}
 
-function MessageList() {
+function MessageList({ messages }: MessageListProps) {
   return (
     <main className="flex-1 overflow-y-auto bg-linear-to-b from-gray-50 to-white px-4 py-8">
       <div className="mx-auto flex max-w-3xl flex-col gap-6">
