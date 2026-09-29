@@ -2,160 +2,216 @@
 
 > A personal AI agent designed to understand my career background, projects, skills, learning journey, and professional work — and answer questions about me using my own knowledge base.
 
+---
+
 ## 🚧 Project Status
 
-**Currently in development**
+**Currently in active development**
 
-Prabhat AI is being built as a 28-day full-stack AI project.
+Prabhat AI is being built as a **28-day full-stack AI engineering project**.
 
-**Current Progress:** 4/28 days completed — **14.29%**
+### Current Progress
 
----
+**6/28 days completed — 21.43%**
 
-## 🎯 Project Goal
-
-The goal of Prabhat AI is to build a personal AI agent that can represent my professional and learning journey.
-
-It will eventually be able to answer questions such as:
-
-* Who am I?
-* What technologies do I know?
-* What am I currently learning?
-* What projects have I built?
-* What technologies were used in my projects?
-* What is my development experience?
-* What are my current learning goals?
-* What work have I completed?
-* Questions about my portfolio and professional background
-
-The agent will eventually use my own structured knowledge and a **RAG (Retrieval-Augmented Generation)** pipeline to provide context-aware responses.
+```text
+Day 1  ████████████████████████████████  ✅
+Day 2  ████████████████████████████████  ✅
+Day 3  ████████████████████████████████  ✅
+Day 4  ████████████████████████████████  ✅
+Day 5  ████████████████████████████████  ✅
+Day 6  ████████████████████████████████  ✅
+Day 7  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
+...
+Day 28 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
+````
 
 ---
 
-## ✨ Planned Features
+# 🎯 Project Goal
 
-### 👤 Personal Profile
+The goal of Prabhat AI is to build a personal AI agent capable of understanding and representing my professional and learning journey.
+
+The agent will eventually be able to answer questions such as:
+
+* Who is Prabhat?
+* What technologies does Prabhat know?
+* What is Prabhat currently learning?
+* What projects has Prabhat built?
+* What technologies were used in those projects?
+* What development experience does Prabhat have?
+* What are Prabhat's current learning goals?
+* What work has Prabhat completed?
+* Questions about Prabhat's portfolio and professional background
+
+The long-term system will use my own structured knowledge together with a **Retrieval-Augmented Generation (RAG)** pipeline to provide context-aware responses.
+
+---
+
+# ✨ Planned Features
+
+## 👤 Personal Profile
 
 * Career background
 * Technical skills
 * Education
 * Learning journey
 * Professional experience
+* Developer profile
 
-### 💻 Project Knowledge
+## 💻 Project Knowledge
 
 * Project descriptions
 * Technologies used
 * Features
 * Development progress
 * Technical decisions
+* GitHub repositories
+* Live project information
 
-### 📚 Learning Knowledge
+## 📚 Learning Knowledge
 
 * Technologies currently being learned
 * Learning progress
 * Notes and concepts
-* Development roadmap
+* Development roadmaps
+* Completed learning milestones
 
-### 🤖 AI Assistant
+## 🤖 AI Assistant
 
 * Natural language conversations
 * Context-aware responses
 * Personal knowledge retrieval
-* AI-powered answers based on my information
+* AI-generated answers
+* Career-focused questions
+* Project-focused questions
 
-### 🔎 RAG Pipeline
+## 🔎 RAG Pipeline
+
+Planned for later stages:
 
 * Knowledge ingestion
 * Document processing
+* Text chunking
 * Embeddings
-* Vector search
+* Vector storage
+* Semantic search
 * Relevant context retrieval
+* Context-aware prompting
 * AI-generated responses
 
-> These AI/RAG features are planned for later stages of development.
+> RAG functionality will be implemented incrementally during the later stages of the project.
 
 ---
 
-## 🏗️ Planned Architecture
+# 🏗️ Architecture
+
+The planned architecture follows a layered approach:
 
 ```text
-User
- │
- ▼
-React Frontend
- │
- ▼
-Express API
- │
- ▼
-Controller
- │
- ▼
-AI Service
- │
- ├──► Knowledge Retrieval
- │
- ├──► RAG Pipeline
- │
- └──► AI Model
- │
- ▼
-Response
- │
- ▼
-User
+                         User
+                           │
+                           ▼
+                    React Frontend
+                           │
+                           ▼
+                     Express API
+                           │
+                           ▼
+                         Route
+                           │
+                           ▼
+                       Controller
+                           │
+                           ▼
+                        Service
+                           │
+              ┌────────────┼────────────┐
+              ▼            ▼            ▼
+          Database     Knowledge      AI Model
+                         Retrieval
+                           │
+                           ▼
+                       RAG Pipeline
+                           │
+                           ▼
+                        Response
+                           │
+                           ▼
+                    React Frontend
+                           │
+                           ▼
+                         User
 ```
+
+The architecture is intentionally designed so that the AI layer remains separate from HTTP handling and database logic.
 
 ---
 
-## 🛠️ Tech Stack
+# 🛠️ Tech Stack
 
-### Frontend
+## Frontend
 
 * React
 * Vite
 * TypeScript
 * Tailwind CSS
 
-### Backend
+## Backend
 
 * Node.js
 * Express.js
 * TypeScript
 * REST API
 
-### Database
+## Database
 
 * MongoDB
 * Mongoose
 
-### AI
+## AI
 
-* LLM API
+Planned and incremental:
+
+* LLM integration
+* Local Llama inference
+* Cloud LLM provider for deployed demo
 * Embeddings
-* Retrieval-Augmented Generation (RAG)
-* Vector Database
+* Retrieval-Augmented Generation
+* Vector database
 
-> AI technologies are planned and will be implemented in later development stages.
+The AI service is designed as a separate layer so the underlying model can be changed without restructuring the rest of the application.
 
-### Development Tools
+## Development Tools
 
 * Git
 * GitHub
 * VS Code
 * npm
+* Postman / API testing tools
 
 ---
 
-## 📁 Project Structure
+# 📁 Project Structure
 
 ```text
 prabhat-ai/
-
 │
 ├── client/
-│   └── # React frontend
+│   ├── src/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   │   ├── ChatHeader.tsx
+│   │   │   ├── ChatInput.tsx
+│   │   │   ├── MessageBubble.tsx
+│   │   │   └── MessageList.tsx
+│   │   │
+│   │   ├── App.tsx
+│   │   ├── index.css
+│   │   └── main.tsx
+│   │
+│   ├── package.json
+│   └── vite.config.ts
 │
 ├── server/
 │   ├── src/
@@ -163,6 +219,8 @@ prabhat-ai/
 │   │   │   └── db.ts
 │   │   │
 │   │   ├── controllers/
+│   │   │   └── chat.controller.ts
+│   │   │
 │   │   ├── middleware/
 │   │   │
 │   │   ├── models/
@@ -173,7 +231,13 @@ prabhat-ai/
 │   │   │   └── Experience.ts
 │   │   │
 │   │   ├── routes/
+│   │   │   └── chat.routes.ts
+│   │   │
 │   │   ├── services/
+│   │   │   └── ai.service.ts
+│   │   │
+│   │   ├── seed/
+│   │   │
 │   │   ├── app.ts
 │   │   └── server.ts
 │   │
@@ -190,27 +254,43 @@ prabhat-ai/
 
 ---
 
-## 🔄 Backend Request Flow
+# 🔄 Backend Request Flow
 
-The backend follows a layered architecture:
+Prabhat AI follows a layered backend architecture:
 
 ```text
-Request
-   ↓
+HTTP Request
+     │
+     ▼
 Express
-   ↓
+     │
+     ▼
 Route
-   ↓
+     │
+     ▼
 Controller
-   ↓
+     │
+     ▼
 Service
-   ↓
-Database / AI / RAG
-   ↓
+     │
+     ├──────────────► Database
+     │
+     ├──────────────► Knowledge Retrieval
+     │
+     └──────────────► AI Model / RAG
+     │
+     ▼
 Response
 ```
 
-This structure keeps HTTP handling, business logic, database operations, and AI functionality separated and maintainable.
+This separation keeps:
+
+* HTTP handling
+* Business logic
+* Database operations
+* AI functionality
+
+independent and maintainable.
 
 ---
 
@@ -218,14 +298,20 @@ This structure keeps HTTP handling, business logic, database operations, and AI 
 
 ## Day 1 — Project Planning ✅
 
+### Completed
+
 * Defined the purpose of Prabhat AI
+* Defined the personal AI agent concept
 * Planned the personal knowledge system
-* Defined the overall project direction
+* Defined the initial architecture
 * Established the 28-day development roadmap
+* Defined the long-term AI/RAG direction
 
 ---
 
-## Day 2 — Backend Setup ✅
+# Day 2 — Backend Setup ✅
+
+### Completed
 
 * Initialized Node.js backend
 * Installed Express
@@ -240,11 +326,11 @@ This structure keeps HTTP handling, business logic, database operations, and AI 
 
 ### Health Endpoint
 
-```text
+```http
 GET /api/health
 ```
 
-Response:
+### Response
 
 ```json
 {
@@ -255,48 +341,59 @@ Response:
 
 ---
 
-## Day 3 — Frontend Setup ✅
+# Day 3 — Frontend Setup ✅
+
+### Completed
 
 * Set up React + Vite frontend
 * Configured TypeScript
 * Configured Tailwind CSS
-* Created basic chat UI foundation
+* Created chat UI foundation
 * Created chat page structure
-* Created message list structure
+* Created message list
 * Created user/AI message structure
-* Added chat input
-* Connected frontend structure with the Prabhat AI project architecture
+* Created chat input
+* Created reusable chat components
 * Verified frontend development setup
 
-> The frontend is currently a foundation for the future AI chat interface. AI functionality will be connected in later roadmap stages.
+### Chat Components
+
+```text
+ChatHeader
+ChatInput
+MessageList
+MessageBubble
+```
+
+At this stage the frontend was primarily a UI foundation for the future AI assistant.
 
 ---
 
-## Day 4 — Database Foundation ✅
+# Day 4 — Database Foundation ✅
+
+### Completed
 
 * Prepared MongoDB database
-* Connected MongoDB to the backend
+* Connected MongoDB to backend
 * Configured database environment variables
-* Installed and configured Mongoose
+* Installed Mongoose
 * Created reusable MongoDB connection module
-* Added MongoDB connection error handling
+* Added database connection error handling
 * Created initial data models
-* Verified database connection
+* Verified MongoDB connection
 * Verified TypeScript production build
 * Completed Git checkpoint
 
-### Database Connection
-
-The backend now connects to MongoDB through Mongoose.
+### Database Flow
 
 ```text
 Prabhat AI Backend
-       │
-       ▼
-    Mongoose
-       │
-       ▼
-    MongoDB
+        │
+        ▼
+     Mongoose
+        │
+        ▼
+      MongoDB
 ```
 
 ### Initial Models
@@ -311,9 +408,7 @@ MongoDB
 └── Experience
 ```
 
-### Model Structure
-
-#### Profile
+### Profile
 
 ```text
 Profile
@@ -325,7 +420,7 @@ Profile
 └── socialLinks
 ```
 
-#### Project
+### Project
 
 ```text
 Project
@@ -337,7 +432,7 @@ Project
 └── featured
 ```
 
-#### Skill
+### Skill
 
 ```text
 Skill
@@ -346,7 +441,7 @@ Skill
 └── level
 ```
 
-#### Learning
+### Learning
 
 ```text
 Learning
@@ -356,7 +451,7 @@ Learning
 └── progress
 ```
 
-#### Experience
+### Experience
 
 ```text
 Experience
@@ -369,20 +464,134 @@ Experience
 
 ### Database Verification
 
-Development server:
-
 ```text
 MongoDB connected successfully
 Prabhat AI server running on port 5000
 ```
 
-Production TypeScript build:
+---
 
-```bash
-npm run build
+# Day 5 — Personal Data Foundation ✅
+
+### Completed
+
+Day 5 established the initial personal knowledge foundation for Prabhat AI.
+
+The project now has structured models for storing information about:
+
+* Profile
+* Projects
+* Skills
+* Learning
+* Experience
+
+The database structure is designed to become the source of truth for the future AI knowledge system.
+
+### Knowledge Direction
+
+```text
+Personal Information
+        │
+        ▼
+Structured MongoDB Data
+        │
+        ▼
+Knowledge Retrieval
+        │
+        ▼
+AI Context
 ```
 
-Build completed successfully.
+This structured information will later become part of the retrieval and RAG pipeline.
+
+---
+
+# Day 6 — Basic Chat API ✅
+
+Day 6 established the first complete frontend-to-backend chat pipeline.
+
+### Chat Flow
+
+```text
+React Chat UI
+      │
+      ▼
+POST /api/chat
+      │
+      ▼
+Express Route
+      │
+      ▼
+Chat Controller
+      │
+      ▼
+AI Service
+      │
+      ▼
+Response
+      │
+      ▼
+React UI
+```
+
+### Implemented
+
+* Created `POST /api/chat`
+* Created chat route
+* Created chat controller
+* Created AI service layer
+* Connected React chat UI to the backend
+* Added frontend message state
+* Added request handling
+* Added backend request validation
+* Added empty-message handling
+* Added whitespace validation
+* Added backend error handling
+* Added CORS configuration
+* Tested API communication
+* Tested frontend → backend → service → frontend flow
+* Committed and pushed changes to GitHub
+
+### Chat Endpoint
+
+```http
+POST /api/chat
+```
+
+### Request
+
+```json
+{
+  "message": "Who is Prabhat?"
+}
+```
+
+### Current Temporary Response
+
+```json
+{
+  "success": true,
+  "response": "AI service received: Who is Prabhat?"
+}
+```
+
+> The current response is intentionally temporary. The actual AI model will be connected during the AI integration stages.
+
+### AI Service
+
+Current service boundary:
+
+```text
+Controller
+     │
+     ▼
+AI Service
+     │
+     ▼
+Temporary AI Response
+```
+
+This architecture allows the AI implementation to be replaced later without changing the route or frontend architecture.
 
 ---
 
@@ -394,36 +603,118 @@ Build completed successfully.
 |   2 | Backend Setup                    |    ✅   |
 |   3 | Frontend Setup                   |    ✅   |
 |   4 | MongoDB + Mongoose + Data Models |    ✅   |
-|   5 | Personal Data                    |    ⬜   |
-|   6 | Knowledge Base                   |    ⬜   |
-|   7 | Data APIs                        |    ⬜   |
-|   8 | Authentication                   |    ⬜   |
-|   9 | Frontend Data Integration        |    ⬜   |
-|  10 | AI Integration                   |    ⬜   |
-|  11 | Chat API                         |    ⬜   |
-|  12 | AI Service                       |    ⬜   |
-|  13 | Prompt Engineering               |    ⬜   |
-|  14 | Chat Interface                   |    ⬜   |
-|  15 | Knowledge Retrieval              |    ⬜   |
-|  16 | RAG Fundamentals                 |    ⬜   |
-|  17 | Document Processing              |    ⬜   |
+|   5 | Personal Data Foundation         |    ✅   |
+|   6 | Basic Chat API                   |    ✅   |
+|   7 | First Working AI                 |    ⬜   |
+|   8 | AI Provider / Model Integration  |    ⬜   |
+|   9 | AI Service Architecture          |    ⬜   |
+|  10 | Prompt Engineering               |    ⬜   |
+|  11 | Chat API Improvements            |    ⬜   |
+|  12 | Chat Interface Improvements      |    ⬜   |
+|  13 | Personal Knowledge Integration   |    ⬜   |
+|  14 | Knowledge Retrieval              |    ⬜   |
+|  15 | RAG Fundamentals                 |    ⬜   |
+|  16 | Document Processing              |    ⬜   |
+|  17 | Text Chunking                    |    ⬜   |
 |  18 | Embeddings                       |    ⬜   |
 |  19 | Vector Database                  |    ⬜   |
-|  20 | Retrieval Pipeline               |    ⬜   |
-|  21 | RAG Integration                  |    ⬜   |
-|  22 | Context-Aware AI                 |    ⬜   |
-|  23 | Chat Improvements                |    ⬜   |
-|  24 | Testing                          |    ⬜   |
-|  25 | Performance + Cleanup            |    ⬜   |
-|  26 | Deployment                       |    ⬜   |
-|  27 | Portfolio Presentation           |    ⬜   |
-|  28 | Final Project & Deployment       |    ⬜   |
+|  20 | Semantic Search                  |    ⬜   |
+|  21 | Retrieval Pipeline               |    ⬜   |
+|  22 | RAG Integration                  |    ⬜   |
+|  23 | Context-Aware AI                 |    ⬜   |
+|  24 | Chat Improvements                |    ⬜   |
+|  25 | Testing                          |    ⬜   |
+|  26 | Performance + Cleanup            |    ⬜   |
+|  27 | Deployment + Portfolio           |    ⬜   |
+|  28 | Final QA & Project Completion    |    ⬜   |
 
-> The roadmap may be refined during implementation, but completed days will reflect only features that have actually been implemented and tested.
+> The roadmap may be refined as implementation progresses, but a day is marked complete only after its implementation and testing are finished.
 
 ---
 
-## 🔐 Environment Variables
+# 🧠 AI Development Strategy
+
+Prabhat AI is being designed to remain **model-agnostic**.
+
+The application should not depend directly on a single AI provider.
+
+### Planned Architecture
+
+```text
+                 AI Service
+                     │
+          ┌──────────┴──────────┐
+          │                     │
+          ▼                     ▼
+     Local Llama          Cloud Provider
+       Inference             Demo AI
+          │                     │
+          └──────────┬──────────┘
+                     ▼
+               Common AI Logic
+```
+
+### Local Development
+
+The long-term local setup is planned around **Llama-based local inference**.
+
+Benefits include:
+
+* Local experimentation
+* No per-request API cost
+* Better understanding of local AI inference
+* Ability to experiment without depending on a cloud API
+
+### Public Demo
+
+A cloud AI provider can be used for the deployed demonstration version.
+
+The application architecture should keep the model provider behind the AI service layer.
+
+---
+
+# 🔎 RAG Architecture
+
+RAG will be implemented in later stages.
+
+The planned pipeline is:
+
+```text
+Personal Knowledge
+       │
+       ▼
+Document Processing
+       │
+       ▼
+Text Chunking
+       │
+       ▼
+Embeddings
+       │
+       ▼
+Vector Database
+       │
+       ▼
+Semantic Search
+       │
+       ▼
+Relevant Context
+       │
+       ▼
+Prompt + Context
+       │
+       ▼
+LLM
+       │
+       ▼
+Personalized Response
+```
+
+The goal is for Prabhat AI to answer questions using **my own verified knowledge**, rather than relying only on the model's general knowledge.
+
+---
+
+# 🔐 Environment Variables
 
 Create a `.env` file inside the `server/` directory.
 
@@ -438,40 +729,65 @@ MONGODB_URI=
 # AI
 AI_API_KEY=
 
-# Other configuration
+# Client
+CLIENT_URL=
 ```
 
-**Never commit `.env` to GitHub.**
+### Important
+
+Never commit `.env` to GitHub.
+
+Use `.env.example` for non-secret configuration documentation.
+
+Example:
+
+```env
+PORT=5000
+MONGODB_URI=
+AI_API_KEY=
+CLIENT_URL=
+```
 
 ---
 
-## 💻 Local Development
+# 💻 Local Development
 
-### 1. Clone the repository
+## 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/prabhat-ai.git
+git clone https://github.com/prabhatjaidiya/prabhat-ai.git
 ```
 
-### 2. Navigate to the backend
-
 ```bash
-cd prabhat-ai/server
+cd prabhat-ai
 ```
 
-### 3. Install dependencies
+---
+
+## 2. Backend Setup
 
 ```bash
+cd server
 npm install
 ```
 
-### 4. Start the development server
+Create:
+
+```text
+server/.env
+```
+
+Configure the required environment variables.
+
+---
+
+## 3. Start Backend
 
 ```bash
 npm run dev
 ```
 
-The backend will run on:
+Backend:
 
 ```text
 http://localhost:5000
@@ -483,76 +799,229 @@ Health check:
 http://localhost:5000/api/health
 ```
 
-### Build
+---
+
+## 4. Frontend Setup
+
+Open another terminal:
 
 ```bash
-npm run build
+cd client
+npm install
 ```
 
-### Start production build
+Start the frontend:
 
 ```bash
-npm start
+npm run dev
+```
+
+Vite will provide the local development URL.
+
+---
+
+# 🧪 API Endpoints
+
+## Health Check
+
+```http
+GET /api/health
+```
+
+Response:
+
+```json
+{
+  "success": true,
+  "message": "Prabhat AI server is running"
+}
 ```
 
 ---
 
-## 📌 Development Philosophy
+## Chat
+
+```http
+POST /api/chat
+```
+
+Request:
+
+```json
+{
+  "message": "Who is Prabhat?"
+}
+```
+
+Current response:
+
+```json
+{
+  "success": true,
+  "response": "AI service received: Who is Prabhat?"
+}
+```
+
+### Invalid Request
+
+Request:
+
+```json
+{
+  "message": ""
+}
+```
+
+Response:
+
+```json
+{
+  "success": false,
+  "message": "Message is required"
+}
+```
+
+---
+
+# 🏗️ Development Philosophy
 
 Prabhat AI is being developed incrementally.
 
 Each development day focuses on:
 
 1. Understanding the concept
-2. Implementing the feature
-3. Testing the implementation
-4. Committing the changes
-5. Documenting the progress
+2. Designing the architecture
+3. Implementing the feature
+4. Testing the implementation
+5. Reviewing the code
+6. Creating a Git checkpoint
+7. Documenting the progress
 
-The goal is not only to build the application, but also to understand the architecture and technologies used to build it.
+The goal is not only to build an application, but also to understand the technologies and architecture behind it.
 
 ---
 
-## 👨‍💻 Developer
+# 📈 Project Progress
 
-**Prabhat Jaidiya**
+```text
+Prabhat AI — 28 Day Development
 
-B.Sc. Mathematical Science
-Delhi University
+Day 01  ████████████████████████████████  ✅
+Day 02  ████████████████████████████████  ✅
+Day 03  ████████████████████████████████  ✅
+Day 04  ████████████████████████████████  ✅
+Day 05  ████████████████████████████████  ✅
+Day 06  ████████████████████████████████  ✅
+Day 07  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
+Day 08  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
+Day 09  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
+Day 10  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
+...
+Day 28  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
+```
+
+### Current Progress
+
+```text
+6 / 28 days
+
+21.43%
+```
+
+---
+
+# 📌 Current Development Focus
+
+The immediate next milestone is:
+
+## Day 7 — First Working AI
+
+The next stage will move the project from a simulated AI response:
+
+```text
+"AI service received: ..."
+```
+
+toward an actual AI-powered response.
+
+The existing architecture will remain:
+
+```text
+React
+  ↓
+Express
+  ↓
+Route
+  ↓
+Controller
+  ↓
+AI Service
+  ↓
+AI Model
+  ↓
+Response
+```
+
+RAG will **not** be introduced prematurely. It will be implemented after the basic AI integration and retrieval foundations are established.
+
+---
+
+# 👨‍💻 Developer
+
+## Prabhat Jaidiya
+
+**B.Sc. Mathematical Science — Delhi University**
 
 ### Current Focus
 
 * Full-Stack Development
-* Node.js
-* Express.js
 * React
 * TypeScript
+* Node.js
+* Express.js
+* MongoDB
 * AI Engineering
+* LLMs
 * RAG
 * Building production-ready projects
 
 ---
 
-## 📈 Project Progress
+# ⭐ Final Goal
+
+Build a real personal AI agent that can understand, retrieve, and communicate my professional and learning journey using my own knowledge base.
+
+The long-term goal is:
 
 ```text
+My Data
+   ↓
+Knowledge Base
+   ↓
+Retrieval
+   ↓
+RAG
+   ↓
+AI Model
+   ↓
 Prabhat AI
-
-Day 1  ████████████████████████████████  ✅
-Day 2  ████████████████████████████████  ✅
-Day 3  ████████████████████████████████  ✅
-Day 4  ████████████████████████████████  ✅
-Day 5  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
-...
-Day 28 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
-
-Progress: 4/28 days — 14.29%
+   ↓
+Personalized Answers
 ```
+
+Prabhat AI is being built as a practical learning project to explore **full-stack development, AI engineering, LLM integration, and RAG systems**.
 
 ---
 
-## ⭐ Goal
+## 🚀 Building in Public
 
-Build a real personal AI agent that can understand and communicate my professional journey through my own knowledge base.
+**Learning by building.
+Building by understanding.
+Improving every day.**
 
-**Building in public. Learning by building. 🚀**
+> One day. One feature. One commit at a time. 🚀
+
+```
+
+One correction before you paste it: **Day 5 is marked as completed above based on the current 6/28 project state**, while the older README you pasted had Day 5–6 defined differently. This version intentionally aligns the README with the **actual progress we've been tracking in this project**, rather than preserving the stale old roadmap.
+```
