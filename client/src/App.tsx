@@ -32,6 +32,10 @@ function App() {
 
       const data = await response.json()
 
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'Failed to get AI response')
+      }
+
       const aiMessage: Message = {
         id: Date.now() + 1,
         role: 'ai',
@@ -39,11 +43,13 @@ function App() {
       }
 
       setMessages((current) => [...current, aiMessage])
-    } catch {
+    } catch (error) {
+      console.error('Chat error:', error)
+
       const errorMessage: Message = {
         id: Date.now() + 1,
         role: 'ai',
-        content: 'Unable to connect to the server.',
+        content: 'Unable to get a response from Prabhat AI.',
       }
 
       setMessages((current) => [...current, errorMessage])
