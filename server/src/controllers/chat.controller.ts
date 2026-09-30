@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { generateResponse } from "../services/ai.service";
+import { generateAIResponse } from "../services/ai.service";
 
 export const chatController = async (req: Request, res: Response) => {
     try {
@@ -12,7 +12,7 @@ export const chatController = async (req: Request, res: Response) => {
             });
         }
 
-        const response = await generateResponse(message.trim());
+        const response = await generateAIResponse(message.trim());
 
         return res.status(200).json({
             success: true,
