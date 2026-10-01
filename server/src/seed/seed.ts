@@ -175,21 +175,21 @@ const seedProfile = async () => {
                 description:
                     "A 42-day learning roadmap covering Node.js, Express.js, MongoDB, Mongoose, and the foundations required for MERN development.",
                 status: "In Progress",
-                progress: 71.43,
+                progress: 76.19,
             },
             {
                 topic: "ShopSphere",
                 description:
                     "A 28-day full-stack e-commerce project focused on building an e-commerce platform with React, TypeScript, Tailwind CSS, React Router, TanStack Query, Node.js, Express, MongoDB, Mongoose, authentication, and role-based functionality.",
                 status: "In Progress",
-                progress: 10.71,
+                progress: 17.86,
             },
             {
                 topic: "Prabhat AI",
                 description:
                     "A 28-day project-based learning journey focused on building a personal AI agent with structured personal data, retrieval, and later AI integration.",
                 status: "In Progress",
-                progress: 17.86,
+                progress: 28.57,
             },
         ];
 
