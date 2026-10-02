@@ -1,25 +1,6 @@
 # 🤖 Prabhat AI
 > A personal AI agent designed to understand my career background, projects, skills, learning journey, and professional work — and eventually answer questions about me using my own knowledge base.
 ---
-# 🚧 Project Status
-**Currently in active development**
-Prabhat AI is being built as a **28-day full-stack AI engineering project**.
-## Current Progress
-**8/28 days completed — 32.14%**
-```text
-Day 01  ████████████████████████████████  ✅
-Day 02  ████████████████████████████████  ✅
-Day 03  ████████████████████████████████  ✅
-Day 04  ████████████████████████████████  ✅
-Day 05  ████████████████████████████████  ✅
-Day 06  ████████████████████████████████  ✅
-Day 07  ████████████████████████████████  ✅
-Day 08  ████████████████████████████████  ✅
-Day 09  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
-...
-Day 28  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
-````
----
 # 🎯 Project Goal
 The goal of Prabhat AI is to build a personal AI agent capable of understanding and representing my professional and learning journey.
 The agent will eventually be able to answer questions such as:
@@ -730,20 +711,20 @@ The local Day 8 commit is ready to be pushed to GitHub.
 |   6 | Basic Chat API                       |    ✅   |
 |   7 | First Working AI                     |    ✅   |
 |   8 | System Instructions                  |    ✅   |
-|   9 | Prompt Engineering Basics            |    ⬜   |
-|  10 | Prompt Design & Structured Responses |    ⬜   |
-|  11 | Chat API Improvements                |    ⬜   |
+|   9 | Knowledge Retrieval                  |    ✅   |
+|  10 | Embeddings                           |    🚧   |
+|  11 | Vector Database Integration          |    ⬜   |
 |  12 | Chat Interface Improvements          |    ⬜   |
 |  13 | Personal Knowledge Integration       |    ⬜   |
-|  14 | Knowledge Retrieval                  |    ⬜   |
+|  14 | Retrieval Pipeline                   |    ⬜   |
 |  15 | RAG Fundamentals                     |    ⬜   |
 |  16 | Document Processing                  |    ⬜   |
 |  17 | Text Chunking                        |    ⬜   |
-|  18 | Embeddings                           |    ⬜   |
-|  19 | Vector Database                      |    ⬜   |
-|  20 | Semantic Search                      |    ⬜   |
-|  21 | Retrieval Pipeline                   |    ⬜   |
-|  22 | RAG Integration                      |    ⬜   |
+|  18 | RAG Integration                       |    ⬜   |
+|  19 | Context-Aware AI                     |    ⬜   |
+|  20 | Chat Improvements                    |    ⬜   |
+|  21 | Testing                              |    ⬜   |
+|  22 | Performance + Cleanup                |    ⬜   |
 |  23 | Context-Aware AI                     |    ⬜   |
 |  24 | Chat Improvements                    |    ⬜   |
 |  25 | Testing                              |    ⬜   |
@@ -972,52 +953,41 @@ Day 05  ███████████████████████�
 Day 06  ████████████████████████████████  ✅
 Day 07  ████████████████████████████████  ✅
 Day 08  ████████████████████████████████  ✅
-Day 09  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
-Day 10  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
+Day 09  ████████████████████████████████  ✅
+Day 10  ████████████████████████████████  ✅
 ...
 Day 28  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
 ```
 ## Current Progress
 ```text
-9 / 28 days
-28.57%
+10 / 28 days completed
+35.71%
 ```
 ---
 # 📌 Current Development Focus
-## Day 8 — System Instructions ✅
-Day 8 is complete.
-The system instructions now control:
-* Identity
-* Purpose
-* Response behavior
-* Accuracy
-* Anti-hallucination behavior
-* Professional communication
-* Unknown-information handling
-* Completed vs planned work
-The current architecture remains:
-```text
-React
-  ↓
-Express
-  ↓
-Route
-  ↓
-Controller
-  ↓
-AI Service
-  ↓
-System Instructions
-  ↓
-Gemini
-  ↓
-Response
-```
-RAG, embeddings, vector search, and personal knowledge retrieval are **not being introduced prematurely**.
-They will be implemented according to the later roadmap stages.
+## Day 9 — Knowledge Retrieval ✅
+Day 9 is complete. Prabhat AI retrieves structured personal knowledge from MongoDB and passes relevant context to the chat controller and Gemini AI service.
+Completed:
+- Connected structured knowledge retrieval to the chat flow
+- Passed relevant personal context into the AI service
+- Updated the current learning progress stored in personal knowledge
+- Tested the profile and knowledge-aware response flow
+## Day 10 — Embeddings ✅
+Day 10 is complete. The embedding service, document/query embedding generation, and cosine-similarity test were implemented and tested.
+Completed so far:
+- Configured the Gemini embedding model gemini-embedding-001
+- Added server/src/services/embedding.service.ts
+- Implemented document and query embeddings using retrieval task types
+- Generated 3072-dimensional vectors for test documents
+- Implemented cosine similarity and tested a semantic query
+- The query “Which online shopping platform is Prabhat developing?” ranked the ShopSphere document first with a similarity score of 0.8325
+Final status:
+- Documentation updated
+- Build and embedding test finalized
+- Git checkpoint completed
 ## Next Development Focus
-### Day 9 — Prompt Engineering Basics
-The next milestone will focus on improving how prompts are designed and structured for reliable AI responses.
+Day 11 — Vector Database Integration
+Day 10 is complete. Day 11 will introduce vector storage and retrieval. The Day 10 test calculated similarity directly; it did not yet use a vector database.
 ---
 # 👨‍💻 Developer
 ## Prabhat Jaidiya
@@ -1085,5 +1055,5 @@ Day 10 → Prompt Design & Structured Responses ⬜
 ```
 So the README above uses the **actual tracked roadmap**.
 ### Current Prabhat AI status
-**8/28 — 28.57% complete ✅**
+**10/28 — 35.71% complete ✅**
 Next: **Day 9 — Prompt Engineering Basics**
