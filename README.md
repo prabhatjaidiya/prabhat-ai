@@ -174,98 +174,110 @@ The AI implementation is kept behind the AI service layer so the underlying mode
 * Postman / API testing tools
 ---
 # 📁 Project Structure
+
 ```text
 prabhat-ai/
 │
 ├── client/
-│   ├── src/
-│   │   ├── assets/
-│   │   │
-│   │   ├── components/
-│   │   │   ├── ChatHeader.tsx
-│   │   │   ├── ChatInput.tsx
-│   │   │   ├── MessageBubble.tsx
-│   │   │   └── MessageList.tsx
-│   │   │
-│   │   ├── App.tsx
-│   │   ├── index.css
-│   │   └── main.tsx
-│   │
-│   ├── package.json
-│   └── vite.config.ts
+│   ├── src/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   │   ├── ChatHeader.tsx
+│   │   │   ├── ChatInput.tsx
+│   │   │   ├── MessageBubble.tsx
+│   │   │   └── MessageList.tsx
+│   │   ├── App.tsx
+│   │   ├── index.css
+│   │   └── main.tsx
+│   ├── package.json
+│   └── vite.config.ts
 │
 ├── server/
-│   ├── src/
-│   │   ├── config/
-│   │   │   ├── db.ts
-│   │   │   └── systemPrompt.ts
-│   │   │
-│   │   ├── controllers/
-│   │   │   └── chat.controller.ts
-│   │   │
-│   │   ├── middleware/
-│   │   │
-│   │   ├── models/
-│   │   │   ├── Profile.ts
-│   │   │   ├── Project.ts
-│   │   │   ├── Skill.ts
-│   │   │   ├── Learning.ts
-│   │   │   └── Experience.ts
-│   │   │
-│   │   ├── routes/
-│   │   │   └── chat.routes.ts
-│   │   │
-│   │   ├── services/
-│   │   │   └── ai.service.ts
-│   │   │
-│   │   ├── seed/
-│   │   │
-│   │   ├── app.ts
-│   │   └── server.ts
-│   │
-│   ├── .env
-│   ├── .gitignore
-│   ├── package.json
-│   └── tsconfig.json
+│   ├── src/
+│   │   ├── config/
+│   │   │   ├── db.ts
+│   │   │   └── systemPrompt.ts
+│   │   │
+│   │   ├── controllers/
+│   │   │   └── chat.controller.ts
+│   │   │
+│   │   ├── middleware/
+│   │   │
+│   │   ├── models/
+│   │   │   ├── Profile.ts
+│   │   │   ├── Project.ts
+│   │   │   ├── Skill.ts
+│   │   │   ├── Learning.ts
+│   │   │   └── Experience.ts
+│   │   │
+│   │   ├── routes/
+│   │   │   └── chat.routes.ts
+│   │   │
+│   │   ├── services/
+│   │   │   ├── ai.service.ts
+│   │   │   ├── embedding.service.ts
+│   │   │   ├── knowledge.service.ts
+│   │   │   └── vector-search.service.ts
+│   │   │
+│   │   ├── seed/
+│   │   ├── app.ts
+│   │   └── server.ts
+│   │
+│   ├── .env
+│   ├── .gitignore
+│   ├── package.json
+│   └── tsconfig.json
 │
 ├── knowledge/
-│   └── # Personal knowledge base
+│   └── # Personal knowledge base
 │
-└── README.md
+├── README.md
+└── .gitignore
 ```
 ---
 # 🔄 Backend Request Flow
+
 Prabhat AI follows a layered backend architecture:
+
 ```text
 HTTP Request
-     │
-     ▼
+     │
+     ▼
 Express
-     │
-     ▼
+     │
+     ▼
 Route
-     │
-     ▼
-Controller
-     │
-     ▼
+     │
+     ▼
+Chat Controller
+     │
+     ├──► Validate User Message
+     │
+     ├──► Knowledge Service
+     │       │
+     │       ├──► Fetch Personal Data from MongoDB
+     │       ├──► Generate Embeddings
+     │       └──► Vector Search (Top-K Results)
+     │
+     ▼
 AI Service
-     │
-     ├──────────────► Database
-     │
-     ├──────────────► Knowledge Retrieval
-     │
-     └──────────────► AI Model / RAG
-     │
-     ▼
-Response
+     │
+     ├──► System Prompt
+     ├──► Retrieved Personal Context
+     └──► Gemini AI Model
+     │
+     ▼
+HTTP Response
 ```
-This separation keeps:
-* HTTP handling
-* Business logic
-* Database operations
-* AI functionality
-independent and maintainable.
+
+This separation keeps the following responsibilities independent and maintainable:
+
+- HTTP request and response handling
+- Route and controller logic
+- Database operations
+- Knowledge retrieval and vector search
+- Embedding generation
+- AI response generation
 ---
 # 🚀 Current Implementation
 # Day 1 — Project Planning ✅
@@ -699,39 +711,170 @@ Your branch is ahead of 'origin/main' by 1 commit.
 nothing to commit, working tree clean
 ```
 The local Day 8 commit is ready to be pushed to GitHub.
+# Day 9 — Knowledge Retrieval ✅
+
+Day 9 connected Prabhat AI's structured personal data to the chat pipeline.
+
+## Completed
+
+- Implemented knowledge retrieval from MongoDB.
+- Retrieved Profile, Skill, Project, and Learning records.
+- Integrated knowledge retrieval with the chat controller.
+- Passed retrieved personal context to the AI service.
+- Updated the AI service to accept knowledge context.
+- Tested profile, project, skills, and learning-related queries.
+
+## Knowledge Retrieval Flow
+
+```text
+User Message
+     │
+     ▼
+Chat Controller
+     │
+     ▼
+Knowledge Service
+     │
+     ▼
+MongoDB
+     │
+     ▼
+Retrieved Personal Data
+     │
+     ▼
+AI Service
+     │
+     ▼
+Gemini Response
+```
+
+**Status:** Completed ✅
+# Day 10 — Embeddings ✅
+
+Day 10 introduced embedding generation and semantic similarity to Prabhat AI.
+
+## Completed
+
+- Configured Gemini `gemini-embedding-001`.
+- Created `embedding.service.ts`.
+- Generated document and query embeddings.
+- Used 3072-dimensional embeddings.
+- Implemented cosine similarity.
+- Tested semantic retrieval against personal project data.
+
+## Embedding Flow
+
+```text
+Personal Knowledge
+       │
+       ▼
+Document Embedding
+       │
+       ▼
+Vector Representation
+
+User Query
+       │
+       ▼
+Query Embedding
+       │
+       ▼
+Cosine Similarity
+       │
+       ▼
+Semantic Matching
+```
+
+**Status:** Completed ✅
+# Day 11 — Vector Search & Retrieval ✅
+
+Day 11 introduced vector-based ranking to retrieve personal knowledge relevant to a user's query.
+
+## Completed
+
+- Created `vector-search.service.ts`.
+- Implemented cosine-similarity ranking.
+- Implemented Top-K result selection.
+- Added similarity-threshold filtering.
+- Integrated vector search into `knowledge.service.ts`.
+- Added `toAIContext()` to exclude embedding arrays from the AI context.
+- Verified the TypeScript build.
+- Reduced the observed knowledge-context size from approximately 608,056 characters to 3,781 characters.
+- Completed four manual chat UI tests covering project, skills, learning, and unrelated queries.
+
+## Vector Search Flow
+
+```text
+User Query
+     │
+     ▼
+Query Embedding
+     │
+     ▼
+Compare with Document Embeddings
+     │
+     ▼
+Cosine Similarity
+     │
+     ▼
+Threshold Filtering
+     │
+     ▼
+Top-K Results
+     │
+     ▼
+AI Context
+     │
+     ▼
+Gemini Response
+```
+
+## Implementation Note
+
+Embeddings are generated at runtime and are not currently persisted in MongoDB. The unrelated-query test also showed that vector search can return personal records when the similarity threshold is set to `0`; the system prompt handled the unrelated question as intended.
+
+**Status:** Completed ✅
+
 ---
 # 📅 28-Day Development Roadmap
-| Day | Focus                                | Status |
-| --: | ------------------------------------ | :----: |
-|   1 | Project Planning                     |    ✅   |
-|   2 | Backend Setup                        |    ✅   |
-|   3 | Frontend Setup                       |    ✅   |
-|   4 | MongoDB + Mongoose + Data Models     |    ✅   |
-|   5 | Personal Data Foundation             |    ✅   |
-|   6 | Basic Chat API                       |    ✅   |
-|   7 | First Working AI                     |    ✅   |
-|   8 | System Instructions                  |    ✅   |
-|   9 | Knowledge Retrieval                  |    ✅   |
-|  10 | Embeddings                           |    🚧   |
-|  11 | Vector Database Integration          |    ⬜   |
-|  12 | Chat Interface Improvements          |    ⬜   |
-|  13 | Personal Knowledge Integration       |    ⬜   |
-|  14 | Retrieval Pipeline                   |    ⬜   |
-|  15 | RAG Fundamentals                     |    ⬜   |
-|  16 | Document Processing                  |    ⬜   |
-|  17 | Text Chunking                        |    ⬜   |
-|  18 | RAG Integration                       |    ⬜   |
-|  19 | Context-Aware AI                     |    ⬜   |
-|  20 | Chat Improvements                    |    ⬜   |
-|  21 | Testing                              |    ⬜   |
-|  22 | Performance + Cleanup                |    ⬜   |
-|  23 | Context-Aware AI                     |    ⬜   |
-|  24 | Chat Improvements                    |    ⬜   |
-|  25 | Testing                              |    ⬜   |
-|  26 | Performance + Cleanup                |    ⬜   |
-|  27 | Deployment + Portfolio               |    ⬜   |
-|  28 | Final QA & Project Completion        |    ⬜   |
+
+| Day | Focus | Status |
+|---:|---|:---:|
+| 1 | Project Planning | ✅ |
+| 2 | Backend Setup | ✅ |
+| 3 | Frontend Setup | ✅ |
+| 4 | MongoDB + Mongoose + Data Models | ✅ |
+| 5 | Personal Data Foundation | ✅ |
+| 6 | Basic Chat API | ✅ |
+| 7 | First Working AI | ✅ |
+| 8 | System Instructions | ✅ |
+| 9 | Knowledge Retrieval | ✅ |
+| 10 | Embeddings | ✅ |
+| 11 | Vector Search & Retrieval | ✅ |
+| 12 | Chat Interface Improvements | ⬜ |
+| 13 | Personal Knowledge Integration | ⬜ |
+| 14 | Retrieval Pipeline | ⬜ |
+| 15 | RAG Fundamentals | ⬜ |
+| 16 | Document Processing | ⬜ |
+| 17 | Text Chunking | ⬜ |
+| 18 | RAG Integration | ⬜ |
+| 19 | Context-Aware AI | ⬜ |
+| 20 | Chat Improvements | ⬜ |
+| 21 | Testing | ⬜ |
+| 22 | Performance + Cleanup | ⬜ |
+| 23 | Context-Aware AI | ⬜ |
+| 24 | Chat Improvements | ⬜ |
+| 25 | Testing | ⬜ |
+| 26 | Performance + Cleanup | ⬜ |
+| 27 | Deployment + Portfolio | ⬜ |
+| 28 | Final QA & Project Completion | ⬜ |
+
 > A day is marked complete only after its implementation and testing are finished.
+
+**Current progress:** 11/28 days completed — **39.29%**
+
+**Next:** Day 12 — Chat Interface Improvements
+
 ---
 # 🧠 AI Development Strategy
 Prabhat AI is being designed to remain **model-agnostic**.
@@ -942,68 +1085,109 @@ Each development day focuses on:
 7. Documenting the progress
 The goal is not only to build an application, but also to understand the technologies and architecture behind it.
 ---
-# 📈 Project Progress
+## 📈 Project Progress
+
 ```text
 Prabhat AI — 28 Day Development
-Day 01  ████████████████████████████████  ✅
-Day 02  ████████████████████████████████  ✅
-Day 03  ████████████████████████████████  ✅
-Day 04  ████████████████████████████████  ✅
-Day 05  ████████████████████████████████  ✅
-Day 06  ████████████████████████████████  ✅
-Day 07  ████████████████████████████████  ✅
-Day 08  ████████████████████████████████  ✅
-Day 09  ████████████████████████████████  ✅
-Day 10  ████████████████████████████████  ✅
+
+Day 01  ████████████████████████████████  ✅
+Day 02  ████████████████████████████████  ✅
+Day 03  ████████████████████████████████  ✅
+Day 04  ████████████████████████████████  ✅
+Day 05  ████████████████████████████████  ✅
+Day 06  ████████████████████████████████  ✅
+Day 07  ████████████████████████████████  ✅
+Day 08  ████████████████████████████████  ✅
+Day 09  ████████████████████████████████  ✅
+Day 10  ████████████████████████████████  ✅
+Day 11  ████████████████████████████████  ✅
+Day 12  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
 ...
-Day 28  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
+Day 28  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
 ```
-## Current Progress
+
+## 📊 Current Progress
+
 ```text
-10 / 28 days completed
-35.71%
+11 / 28 days completed
+39.29%
+
+Current: Day 11 — Vector Search & Retrieval ✅
+Next: Day 12 — Chat Interface Improvements
 ```
 ---
-# 📌 Current Development Focus
-## Day 9 — Knowledge Retrieval ✅
-Day 9 is complete. Prabhat AI retrieves structured personal knowledge from MongoDB and passes relevant context to the chat controller and Gemini AI service.
-Completed:
-- Connected structured knowledge retrieval to the chat flow
-- Passed relevant personal context into the AI service
-- Updated the current learning progress stored in personal knowledge
-- Tested the profile and knowledge-aware response flow
-## Day 10 — Embeddings ✅
-Day 10 is complete. The embedding service, document/query embedding generation, and cosine-similarity test were implemented and tested.
-Completed so far:
-- Configured the Gemini embedding model gemini-embedding-001
-- Added server/src/services/embedding.service.ts
-- Implemented document and query embeddings using retrieval task types
-- Generated 3072-dimensional vectors for test documents
-- Implemented cosine similarity and tested a semantic query
-- The query “Which online shopping platform is Prabhat developing?” ranked the ShopSphere document first with a similarity score of 0.8325
-Final status:
-- Documentation updated
-- Build and embedding test finalized
-- Git checkpoint completed
-## Next Development Focus
-Day 11 — Vector Database Integration
-Day 10 is complete. Day 11 will introduce vector storage and retrieval. The Day 10 test calculated similarity directly; it did not yet use a vector database.
+## Current Development Focus
+
+### Day 9 — Knowledge Retrieval ✅
+- Implemented structured knowledge retrieval from MongoDB.
+- Connected retrieved profile, skills, projects, and learning data to the chat controller and Gemini AI service.
+- Enabled Prabhat AI to answer questions using relevant personal context.
+
+### Day 10 — Embeddings ✅
+- Configured Gemini's `gemini-embedding-001` model.
+- Created `embedding.service.ts` for document and query embeddings.
+- Generated 3072-dimensional embeddings.
+- Implemented cosine similarity for semantic matching.
+- Tested semantic retrieval and confirmed ShopSphere ranked first for an online shopping platform query.
+
+### Day 11 — Vector Search & Retrieval 🚧
+
+**Status:** Steps 1–4 completed. Step 5 (Notes + Git) in progress.
+
+**Implementation completed:**
+- Created `vector-search.service.ts`.
+- Implemented cosine similarity ranking, Top-K results, and similarity threshold filtering.
+- Integrated semantic retrieval into `knowledge.service.ts`.
+- Generated query embeddings and ranked relevant skills, projects, and learning records.
+- Added `toAIContext()` to exclude embedding arrays before sending retrieved context to Gemini.
+- Updated the AI service integration and verified the TypeScript build.
+
+**Context optimization:**
+- Reduced the retrieved knowledge context from approximately 608,056 characters to 3,781 characters.
+- Resolved the HTTP 429 issue encountered during the skills query by removing unnecessary embedding arrays from the AI context.
+
+**Manual chat tests:**
+
+| Test | Result |
+|---|---|
+| ShopSphere project query | Passed |
+| Skills query | Passed |
+| Learning progress query | Passed |
+| Unrelated general-knowledge query | Passed — the assistant stayed within its intended scope |
+
+**Observation:** Unrelated queries can still retrieve personal records because the similarity threshold is currently set to `0`. The system prompt prevents the assistant from answering unrelated questions, but retrieval threshold tuning may be worth investigating.
+
+**Remaining tasks:**
+- Update Day 11 notes.
+- Commit the documentation and notes.
+- Verify Git status and ensure the working tree is clean.
+- Mark Day 11 complete only after the checkpoint is confirmed.
+
+**Current progress:** 10/28 days completed (35.71%).
+
 ---
 # 👨‍💻 Developer
+
 ## Prabhat Jaidiya
+
 **B.Sc. Mathematical Science — Delhi University**
+
 ### Current Focus
-* Full-Stack Development
-* React
-* TypeScript
-* Node.js
-* Express.js
-* MongoDB
-* AI Engineering
-* LLMs
-* Prompt Engineering
-* RAG
-* Building production-ready projects
+
+- Full-Stack Development
+- React
+- TypeScript
+- Node.js
+- Express.js
+- MongoDB
+- REST API Development
+- AI Engineering
+- Large Language Models (LLMs)
+- Prompt Engineering
+- Embeddings and Vector Search
+- Retrieval-Augmented Generation (RAG)
+- Building and deploying production-ready projects
+
 ---
 # ⭐ Final Goal
 Build a real personal AI agent that can understand, retrieve, and communicate my professional and learning journey using my own knowledge base.
@@ -1034,26 +1218,21 @@ Prabhat AI is being built as a practical learning project to explore:
 * Production AI architecture
 ---
 # 🚀 Building in Public
+
 **Learning by building.**
+
 **Building by understanding.**
+
 **Improving every day.**
+
 > One day. One feature. One commit at a time. 🚀
-````
-### One important correction to your original roadmap
-Your pasted README had:
-```text
-Day 8  → System Instructions
-Day 9  → AI Service Architecture
-Day 10 → Prompt Engineering
-````
-That **doesn't match the roadmap we're currently tracking**.
-Our official tracking is:
-```text
-Day 8  → System Instructions       ✅
-Day 9  → Prompt Engineering Basics ⬜
-Day 10 → Prompt Design & Structured Responses ⬜
-```
-So the README above uses the **actual tracked roadmap**.
-### Current Prabhat AI status
-**10/28 — 35.71% complete ✅**
-Next: **Day 9 — Prompt Engineering Basics**
+
+### Current Prabhat AI Status
+
+**Overall Progress: 10/28 days (35.71%)**
+
+[██████████░░░░░░░░░░] Day 11 in progress
+
+**Current Task:** Day 11 — Step 5: Notes + Git
+
+**Next:** Day 12 — Chat Interface Improvements (after Day 11 is completed)

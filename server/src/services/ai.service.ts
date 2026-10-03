@@ -20,6 +20,12 @@ User Question:
 ${message}
 `;
 
+        console.log("Prompt diagnostics:", {
+            messageLength: message.length,
+            knowledgeLength: context.length,
+            promptLength: prompt.length,
+        });
+
         const response = await ai.models.generateContent({
             model: "gemini-3.5-flash-lite",
             contents: prompt,
