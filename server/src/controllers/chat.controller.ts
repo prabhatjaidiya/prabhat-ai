@@ -1,12 +1,19 @@
 import { Request, Response } from "express";
-import { generateAIResponse } from "../services/ai.service";
-import { retrieveKnowledge } from "../services/knowledge.service";
+import { generateAIResponse } from "../services/ai.service.js";
+import { retrieveKnowledge } from "../services/knowledge.service.js";
 
-export const chatController = async (req: Request, res: Response) => {
+export const chatController = async (
+    req: Request,
+    res: Response
+) => {
     try {
         const { message } = req.body;
 
-        if (!message || typeof message !== "string" || !message.trim()) {
+        if (
+            !message ||
+            typeof message !== "string" ||
+            !message.trim()
+        ) {
             return res.status(400).json({
                 success: false,
                 message: "Message is required",
@@ -15,15 +22,22 @@ export const chatController = async (req: Request, res: Response) => {
 
         const cleanMessage = message.trim();
 
-        // Retrieve relevant personal knowledge
         const knowledge = await retrieveKnowledge(cleanMessage);
 
         console.log("Retrieved knowledge:", knowledge);
 
-        // Generate AI response using the retrieved knowledge
+        // Stop before Gemini when no relevant knowledge exists
+        if (!knowledge.hasRelevantKnowledge) {
+            return res.status(200).json({
+                success: true,
+                response:
+                    "I don't have enough information in my current knowledge to answer that question.",
+            });
+        }
+
         const response = await generateAIResponse(
             cleanMessage,
-            knowledge
+            knowledge.results
         );
 
         return res.status(200).json({
@@ -35,7 +49,8 @@ export const chatController = async (req: Request, res: Response) => {
 
         return res.status(500).json({
             success: false,
-            message: "Something went wrong while processing your message",
+            message:
+                "Something went wrong while processing your message",
         });
     }
 };

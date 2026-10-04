@@ -60,75 +60,110 @@ Planned for later stages:
 # 🏗️ Architecture
 Prabhat AI follows a layered backend architecture.
 ## Current AI Request Flow
+
 ```text
 User
-  │
-  ▼
+  │
+  ▼
 React Frontend
-  │
-  ▼
+  │
+  ▼
 POST /api/chat
-  │
-  ▼
+  │
+  ▼
 Express Route
-  │
-  ▼
+  │
+  ▼
 Chat Controller
-  │
-  ▼
+  │
+  ▼
+Knowledge Retrieval
+  │
+  ├── Query Embedding
+  │
+  ├── Vector Search
+  │
+  ├── Top-K Selection
+  │
+  └── Relevance Threshold
+  │
+  ▼
+Relevant Knowledge
+  │
+  ▼
+Context Formatting
+  │
+  ▼
 AI Service
-  │
-  ▼
-System Instructions
-  │
-  ▼
+  │
+  ├── System Instructions
+  ├── Retrieved Context
+  └── User Question
+  │
+  ▼
 Gemini LLM
-  │
-  ▼
-AI Response
-  │
-  ▼
+  │
+  ▼
+Grounded AI Response
+  │
+  ▼
 React Frontend
-  │
-  ▼
+  │
+  ▼
 User
+
+And your **Long-Term Architecture** can remain as a high-level architecture, but I'd make the RAG section slightly more explicit:
+
 ```
+
 ## Long-Term Architecture
+
 ```text
-                         User
-                           │
-                           ▼
-                    React Frontend
-                           │
-                           ▼
-                      Express API
-                           │
-                           ▼
-                         Route
-                           │
-                           ▼
-                       Controller
-                           │
-                           ▼
-                        Service
-                           │
-              ┌────────────┼────────────┐
-              ▼            ▼            ▼
-          Database     Knowledge      AI Model
-                       Retrieval
-                           │
-                           ▼
-                      RAG Pipeline
-                           │
-                           ▼
-                        Response
-                           │
-                           ▼
-                    React Frontend
-                           │
-                           ▼
-                          User
+                         User
+                           │
+                           ▼
+                    React Frontend
+                           │
+                           ▼
+                      Express API
+                           │
+                           ▼
+                         Route
+                           │
+                           ▼
+                      Controller
+                           │
+                           ▼
+                       Services
+                           │
+              ┌────────────┼────────────┐
+              ▼            ▼            ▼
+          Database    Knowledge       AI Model
+                       Retrieval
+                           │
+                           ▼
+                     RAG Pipeline
+                           │
+              ┌────────────┼────────────┐
+              ▼            ▼            ▼
+        Embeddings    Vector Search   Context
+                           │
+                           ▼
+                     Relevant Knowledge
+                           │
+                           ▼
+                       Gemini
+                           │
+                           ▼
+                       Response
+                           │
+                           ▼
+                   React Frontend
+                           │
+                           ▼
+                         User
 ```
+
 The architecture keeps:
 * HTTP handling
 * Business logic
@@ -217,7 +252,9 @@ prabhat-ai/
 │   │   │   ├── ai.service.ts
 │   │   │   ├── embedding.service.ts
 │   │   │   ├── knowledge.service.ts
-│   │   │   └── vector-search.service.ts
+│   │   │   ├── vector-search.service.ts
+│   │   │   ├── context.service.ts
+│   │   │   └── rag.service.ts
 │   │   │
 │   │   ├── seed/
 │   │   ├── app.ts
@@ -234,6 +271,7 @@ prabhat-ai/
 ├── README.md
 └── .gitignore
 ```
+
 ---
 # 🔄 Backend Request Flow
 
@@ -253,31 +291,43 @@ Chat Controller
      │
      ├──► Validate User Message
      │
-     ├──► Knowledge Service
-     │       │
-     │       ├──► Fetch Personal Data from MongoDB
-     │       ├──► Generate Embeddings
-     │       └──► Vector Search (Top-K Results)
+     ▼
+Knowledge Service
+     │
+     ├──► Fetch Personal Data from MongoDB
+     │
+     ├──► Generate Query Embedding
+     │
+     ├──► Generate/Prepare Knowledge Embeddings
+     │
+     ├──► Global Vector Search
+     │
+     ├──► Top-K Selection
+     │
+     └──► Relevance Threshold
+     │
+     ├──► No Relevant Knowledge
+     │        │
+     │        └──► Return Knowledge-Unavailable Response
+     │
+     ▼
+Context Formatting
      │
      ▼
 AI Service
      │
      ├──► System Prompt
      ├──► Retrieved Personal Context
+     ├──► User Question
      └──► Gemini AI Model
+     │
+     ▼
+Grounded AI Response
      │
      ▼
 HTTP Response
 ```
 
-This separation keeps the following responsibilities independent and maintainable:
-
-- HTTP request and response handling
-- Route and controller logic
-- Database operations
-- Knowledge retrieval and vector search
-- Embedding generation
-- AI response generation
 ---
 # 🚀 Current Implementation
 # Day 1 — Project Planning ✅
@@ -834,7 +884,285 @@ Gemini Response
 Embeddings are generated at runtime and are not currently persisted in MongoDB. The unrelated-query test also showed that vector search can return personal records when the similarity threshold is set to `0`; the system prompt handled the unrelated question as intended.
 
 **Status:** Completed ✅
+# Day 12 — RAG Pipeline ✅
 
+Day 12 connected embeddings, vector search, knowledge retrieval, context formatting, and Gemini into a complete Retrieval-Augmented Generation pipeline for Prabhat AI.
+
+## Completed
+
+- Reviewed Knowledge Retrieval, Embeddings, and Vector Search concepts.
+- Implemented the complete RAG pipeline.
+- Connected user query → query embedding → vector search.
+- Implemented global Top-K retrieval across skills, projects, and learning records.
+- Added formatted AI context from retrieved knowledge.
+- Connected retrieved context with the user question before sending it to Gemini.
+- Reused `PRABHAT_AI_SYSTEM_PROMPT` for consistent Prabhat AI behavior.
+- Added relevance-threshold filtering using `RAG_MIN_RELEVANCE_SCORE`.
+- Added an application-level relevance gate to prevent Gemini from generating responses when no sufficiently relevant knowledge is retrieved.
+- Verified that embedding arrays and unnecessary internal data are excluded from the AI context.
+- Tested relevant skill, project, and learning questions.
+- Tested an unsupported AWS/Kubernetes question.
+- Verified that unsupported questions stop before Gemini when no relevant knowledge is retrieved.
+- Verified grounded responses using retrieved personal knowledge.
+- Updated the architecture and backend request-flow documentation.
+- Documented the RAG pipeline and implementation decisions.
+
+## RAG Pipeline Flow
+
+```text
+User Query
+     │
+     ▼
+Query Embedding
+     │
+     ▼
+Global Vector Search
+     │
+     ▼
+Similarity Ranking
+     │
+     ▼
+Relevance Threshold
+     │
+     ├──────────────► No Relevant Knowledge
+     │                       │
+     │                       ▼
+     │                Knowledge-Unavailable
+     │                    Response
+     │
+     ▼
+Top-K Results
+     │
+     ▼
+Context Formatting
+     │
+     ▼
+User Question + Retrieved Context
+     │
+     ▼
+System Instructions
+     │
+     ▼
+Gemini LLM
+     │
+     ▼
+Grounded AI Response
+     │
+     ▼
+User
+```
+
+## RAG Architecture
+
+```text
+                    User
+                      │
+                      ▼
+               React Frontend
+                      │
+                      ▼
+                Express API
+                      │
+                      ▼
+                 Controller
+                      │
+                      ▼
+              Knowledge Service
+                      │
+          ┌───────────┼───────────┐
+          ▼           ▼           ▼
+      MongoDB     Embeddings   Vector Search
+                                  │
+                                  ▼
+                            Top-K + Threshold
+                                  │
+                                  ▼
+                         Relevant Knowledge
+                                  │
+                                  ▼
+                         Context Formatting
+                                  │
+                                  ▼
+                             AI Service
+                                  │
+                    ┌─────────────┼─────────────┐
+                    ▼             ▼             ▼
+              System Prompt   Context       Question
+                    │             │             │
+                    └─────────────┼─────────────┘
+                                  ▼
+                              Gemini
+                                  │
+                                  ▼
+                            Final Response
+```
+
+## RAG Concepts
+
+RAG stands for **Retrieval-Augmented Generation**.
+
+The system first retrieves relevant personal knowledge and then provides that knowledge to Gemini so the generated response is grounded in the retrieved information.
+
+### Retrieval
+
+Find relevant knowledge using:
+
+- Query embeddings
+- Cosine similarity
+- Global Top-K ranking
+- Similarity threshold
+
+### Generation
+
+Gemini receives:
+
+- System instructions
+- Retrieved personal knowledge
+- User question
+
+and generates a natural response based on the available context.
+
+## Relevance Gate
+
+The system uses:
+
+```env
+RAG_MIN_RELEVANCE_SCORE=0.7
+```
+
+If no result meets the minimum relevance score, Gemini is not called.
+
+Instead, the application returns:
+
+```text
+I don't have enough information in my current knowledge
+to answer that question.
+```
+
+This prevents the model from turning missing information into unsupported personal claims.
+
+## Testing
+
+### Test 1 — Skills
+
+Query:
+
+```text
+What technologies does Prabhat know?
+```
+
+Result:
+
+Relevant personal/project knowledge was retrieved and Gemini generated a technology-focused response.
+
+**Status:** Passed ✅
+
+### Test 2 — Projects
+
+Query:
+
+```text
+What projects has Prabhat worked on?
+```
+
+Result:
+
+Project-related knowledge was retrieved and Gemini generated a project-focused response.
+
+**Status:** Passed ✅
+
+### Test 3 — Learning
+
+Query:
+
+```text
+What is Prabhat currently learning?
+```
+
+Result:
+
+Learning-related knowledge was retrieved and Gemini generated a learning-focused response.
+
+A retrieval limitation was observed where ShopSphere was not included in the Top-K results.
+
+**Status:** Passed with known retrieval limitation ⚠️
+
+### Test 4 — Unsupported Knowledge
+
+Query:
+
+```text
+Does Prabhat have 5 years of professional
+experience working with AWS and Kubernetes?
+```
+
+Result:
+
+No sufficiently relevant knowledge was retrieved.
+
+```text
+results: []
+hasRelevantKnowledge: false
+```
+
+The application stopped before calling Gemini and returned a knowledge-unavailable response.
+
+**Status:** Passed ✅
+
+## Implementation Notes
+
+User queries use:
+
+```text
+RETRIEVAL_QUERY
+```
+
+Stored knowledge uses:
+
+```text
+RETRIEVAL_DOCUMENT
+```
+
+Knowledge is currently searched in memory using cosine similarity.
+
+Embeddings are generated at runtime and are not currently persisted in MongoDB.
+
+The current global Top-K search combines:
+
+- Skills
+- Projects
+- Learning
+
+before performing similarity ranking.
+
+## Known Limitations
+
+- Knowledge embeddings are regenerated at runtime instead of being persisted.
+- Global semantic Top-K can sometimes retrieve a less useful knowledge category.
+- Knowledge freshness depends on the information currently stored in MongoDB.
+- Retrieval quality can be improved later with metadata filtering, hybrid search, reranking, or better knowledge chunking.
+
+## Key Learning
+
+RAG is not simply sending database information to an LLM.
+
+A reliable RAG system requires:
+
+```text
+Good Retrieval
+      +
+Relevant Context
+      +
+Grounded Generation
+      +
+Relevance Validation
+      =
+More Reliable AI Responses
+```
+
+The application-level relevance gate is especially important because **absence of retrieved evidence should not automatically be interpreted as proof that something is false**.
+
+**Status:** Completed ✅
 ---
 # 📅 28-Day Development Roadmap
 
@@ -851,7 +1179,7 @@ Embeddings are generated at runtime and are not currently persisted in MongoDB. 
 | 9 | Knowledge Retrieval | ✅ |
 | 10 | Embeddings | ✅ |
 | 11 | Vector Search & Retrieval | ✅ |
-| 12 | Chat Interface Improvements | ⬜ |
+| 12 | Chat Interface Improvements | ✅ |
 | 13 | Personal Knowledge Integration | ⬜ |
 | 14 | Retrieval Pipeline | ⬜ |
 | 15 | RAG Fundamentals | ⬜ |
@@ -871,9 +1199,9 @@ Embeddings are generated at runtime and are not currently persisted in MongoDB. 
 
 > A day is marked complete only after its implementation and testing are finished.
 
-**Current progress:** 11/28 days completed — **39.29%**
+**Current progress:** 12/28 days completed — **48.86%**
 
-**Next:** Day 12 — Chat Interface Improvements
+**Next:** Day 13 — Chat Interface Improvements
 
 ---
 # 🧠 AI Development Strategy
@@ -914,39 +1242,58 @@ A cloud AI provider can be used for the deployed demonstration version.
 The application architecture keeps the model provider behind the AI service layer so the provider can be changed later.
 ---
 # 🔎 RAG Architecture
-RAG will be implemented in later stages.
-The planned pipeline is:
+
+Prabhat AI uses a Retrieval-Augmented Generation (RAG) pipeline to answer
+questions using Prabhat's own verified knowledge.
+
+The current pipeline is:
+
 ```text
+User Question
+      │
+      ▼
+Query Embedding
+      │
+      ▼
+Semantic Vector Search
+      │
+      ▼
+Similarity Ranking
+      │
+      ▼
+Relevance Threshold
+      │
+      ▼
+Top-K Relevant Knowledge
+      │
+      ▼
+Context Formatting
+      │
+      ▼
+Prompt + Retrieved Context
+      │
+      ▼
+Gemini LLM
+      │
+      ▼
+Grounded Personalized Response
+
 Personal Knowledge
-       │
-       ▼
-Document Processing
-       │
-       ▼
-Text Chunking
-       │
-       ▼
-Embeddings
-       │
-       ▼
-Vector Database
-       │
-       ▼
-Semantic Search
-       │
-       ▼
-Relevant Context
-       │
-       ▼
-Prompt + Context
-       │
-       ▼
-LLM
-       │
-       ▼
-Personalized Response
+      │
+      ├── Skills
+      ├── Projects
+      └── Learning Records
+              │
+              ▼
+        Document Embeddings
+              │
+              ▼
+       Vector Representation
+              │
+              ▼
+        Semantic Vector Search
 ```
-The goal is for Prabhat AI to answer questions using **Prabhat's own verified knowledge**, rather than relying only on general model knowledge.
+
 ---
 # 🔐 Environment Variables
 Create a `.env` file inside the `server/` directory.

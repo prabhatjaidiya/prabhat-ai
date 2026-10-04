@@ -42,7 +42,7 @@ export function searchVectors(
     queryVector: number[],
     documents: VectorDocument[],
     topK = 3,
-    threshold = 0
+    threshold = 0.7
 ): VectorSearchResult[] {
     if (!Number.isInteger(topK) || topK < 1) {
         throw new Error("topK must be a positive integer.");
