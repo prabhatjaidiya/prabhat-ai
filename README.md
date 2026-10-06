@@ -886,7 +886,9 @@ Embeddings are generated at runtime and are not currently persisted in MongoDB. 
 **Status:** Completed ✅
 # Day 12 — RAG Pipeline ✅
 
-Day 12 connected embeddings, vector search, knowledge retrieval, context formatting, and Gemini into a complete Retrieval-Augmented Generation pipeline for Prabhat AI.
+Day 12 connected embeddings, vector search, knowledge retrieval,
+context formatting, and Gemini into a complete Retrieval-Augmented
+Generation pipeline for Prabhat AI.
 
 ## Completed
 
@@ -899,57 +901,56 @@ Day 12 connected embeddings, vector search, knowledge retrieval, context formatt
 - Reused `PRABHAT_AI_SYSTEM_PROMPT` for consistent Prabhat AI behavior.
 - Added relevance-threshold filtering using `RAG_MIN_RELEVANCE_SCORE`.
 - Added an application-level relevance gate to prevent Gemini from generating responses when no sufficiently relevant knowledge is retrieved.
+- Integrated profile information into the RAG context.
+- Updated the controller to use `generateRAGResponse()`.
 - Verified that embedding arrays and unnecessary internal data are excluded from the AI context.
-- Tested relevant skill, project, and learning questions.
-- Tested an unsupported AWS/Kubernetes question.
-- Verified that unsupported questions stop before Gemini when no relevant knowledge is retrieved.
+- Tested relevant skill, project, learning, and profile questions.
+- Tested unknown and unsupported questions.
 - Verified grounded responses using retrieved personal knowledge.
-- Updated the architecture and backend request-flow documentation.
-- Documented the RAG pipeline and implementation decisions.
 
 ## RAG Pipeline Flow
 
 ```text
 User Query
-     │
-     ▼
+    │
+    ▼
 Query Embedding
-     │
-     ▼
+    │
+    ▼
 Global Vector Search
-     │
-     ▼
+    │
+    ▼
 Similarity Ranking
-     │
-     ▼
+    │
+    ▼
 Relevance Threshold
-     │
-     ├──────────────► No Relevant Knowledge
-     │                       │
-     │                       ▼
-     │                Knowledge-Unavailable
-     │                    Response
-     │
-     ▼
+    │
+    ├──────────────► No Relevant Knowledge
+    │                       │
+    │                       ▼
+    │               Knowledge-Unavailable
+    │                    Response
+    │
+    ▼
 Top-K Results
-     │
-     ▼
+    │
+    ▼
+Profile + Retrieved Context
+    │
+    ▼
 Context Formatting
-     │
-     ▼
+    │
+    ▼
 User Question + Retrieved Context
-     │
-     ▼
+    │
+    ▼
 System Instructions
-     │
-     ▼
+    │
+    ▼
 Gemini LLM
-     │
-     ▼
+    │
+    ▼
 Grounded AI Response
-     │
-     ▼
-User
 ```
 
 ## RAG Architecture
@@ -958,43 +959,43 @@ User
                     User
                       │
                       ▼
-               React Frontend
+                React Frontend
                       │
                       ▼
-                Express API
+                 Express API
                       │
                       ▼
-                 Controller
+                  Controller
                       │
                       ▼
-              Knowledge Service
+               Knowledge Service
                       │
           ┌───────────┼───────────┐
           ▼           ▼           ▼
-      MongoDB     Embeddings   Vector Search
-                                  │
-                                  ▼
+       MongoDB    Embeddings   Vector Search
+                                   │
+                                   ▼
                             Top-K + Threshold
-                                  │
-                                  ▼
-                         Relevant Knowledge
-                                  │
-                                  ▼
-                         Context Formatting
-                                  │
-                                  ▼
-                             AI Service
-                                  │
-                    ┌─────────────┼─────────────┐
-                    ▼             ▼             ▼
-              System Prompt   Context       Question
-                    │             │             │
-                    └─────────────┼─────────────┘
-                                  ▼
-                              Gemini
-                                  │
-                                  ▼
-                            Final Response
+                                   │
+                                   ▼
+                            Retrieved Knowledge
+                                   │
+                                   ▼
+                            Context Formatting
+                                   │
+                                   ▼
+                              AI Service
+                                   │
+                      ┌────────────┼────────────┐
+                      ▼            ▼            ▼
+                 System Prompt   Context     Question
+                      │            │            │
+                      └────────────┼────────────┘
+                                   ▼
+                                 Gemini
+                                   │
+                                   ▼
+                             Final Response
 ```
 
 ## RAG Concepts
@@ -1083,29 +1084,48 @@ Result:
 
 Learning-related knowledge was retrieved and Gemini generated a learning-focused response.
 
-A retrieval limitation was observed where ShopSphere was not included in the Top-K results.
+**Status:** Passed ✅
 
-**Status:** Passed with known retrieval limitation ⚠️
-
-### Test 4 — Unsupported Knowledge
+### Test 4 — Profile
 
 Query:
 
 ```text
-Does Prabhat have 5 years of professional
-experience working with AWS and Kubernetes?
+What is Prabhat's role?
+```
+
+Result:
+
+Profile information was successfully included in the RAG context and Gemini correctly identified Prabhat's role as an aspiring Full-Stack Developer.
+
+**Status:** Passed ✅
+
+### Test 5 — Unknown Question
+
+Query:
+
+```text
+What is Prabhat's favorite programming language?
 ```
 
 Result:
 
 No sufficiently relevant knowledge was retrieved.
+The application stopped before calling Gemini and returned a knowledge-unavailable response.
+
+**Status:** Passed ✅
+
+### Test 6 — Unsupported Professional Experience
+
+Query:
 
 ```text
-results: []
-hasRelevantKnowledge: false
+Does Prabhat have 10 years of professional experience?
 ```
 
-The application stopped before calling Gemini and returned a knowledge-unavailable response.
+Result:
+
+I do not have that information.
 
 **Status:** Passed ✅
 
@@ -1163,6 +1183,38 @@ More Reliable AI Responses
 The application-level relevance gate is especially important because **absence of retrieved evidence should not automatically be interpreted as proof that something is false**.
 
 **Status:** Completed ✅
+# Day 13 — Improve Accuracy 🚧
+
+Day 13 focused on improving the accuracy and grounding behavior of
+the RAG pipeline.
+
+## Completed
+
+- Reviewed the complete RAG pipeline.
+- Evaluated retrieval quality across different query types.
+- Evaluated the similarity threshold.
+- Evaluated the Top-K value.
+- Kept `RAG_MIN_RELEVANCE_SCORE=0.7`.
+- Kept `Top-K=3`.
+- Reviewed and improved retrieved context formatting.
+- Integrated profile information into the RAG context.
+- Updated the controller to use `generateRAGResponse()`.
+- Improved grounding instructions in the RAG generation prompt.
+- Added protection against unsupported factual inference.
+- Added explicit handling for unsupported personal yes/no questions.
+- Tested relevant queries.
+- Tested irrelevant queries.
+- Tested unknown questions.
+- Tested unsupported professional-experience questions.
+
+## Accuracy Configuration
+
+Current retrieval configuration:
+
+```text
+Top-K: 3
+Similarity Threshold: 0.7
+```
 ---
 # 📅 28-Day Development Roadmap
 
@@ -1180,7 +1232,7 @@ The application-level relevance gate is especially important because **absence o
 | 10 | Embeddings | ✅ |
 | 11 | Vector Search & Retrieval | ✅ |
 | 12 | Chat Interface Improvements | ✅ |
-| 13 | Personal Knowledge Integration | ⬜ |
+| 13 | Personal Knowledge Integration | 🚧 |
 | 14 | Retrieval Pipeline | ⬜ |
 | 15 | RAG Fundamentals | ⬜ |
 | 16 | Document Processing | ⬜ |
@@ -1197,11 +1249,11 @@ The application-level relevance gate is especially important because **absence o
 | 27 | Deployment + Portfolio | ⬜ |
 | 28 | Final QA & Project Completion | ⬜ |
 
-> A day is marked complete only after its implementation and testing are finished.
+**Current progress:** 12/28 days completed — **42.86%**
 
-**Current progress:** 12/28 days completed — **48.86%**
+**Current:** Day 13 — Improve Accuracy 🚧
 
-**Next:** Day 13 — Chat Interface Improvements
+**Next:** Day 14 — Week 2 QA (after Day 13 is completed)
 
 ---
 # 🧠 AI Development Strategy

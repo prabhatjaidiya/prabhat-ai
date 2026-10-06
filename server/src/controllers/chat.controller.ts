@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { generateAIResponse } from "../services/ai.service.js";
+import { generateRAGResponse } from "../services/ai.service.js";
 import { retrieveKnowledge } from "../services/knowledge.service.js";
 
 export const chatController = async (
@@ -22,11 +22,13 @@ export const chatController = async (
 
         const cleanMessage = message.trim();
 
-        const knowledge = await retrieveKnowledge(cleanMessage);
+        // 1. Retrieve relevant knowledge
+        const knowledge =
+            await retrieveKnowledge(cleanMessage);
 
         console.log("Retrieved knowledge:", knowledge);
 
-        // Stop before Gemini when no relevant knowledge exists
+        // 2. Stop if no relevant semantic knowledge exists
         if (!knowledge.hasRelevantKnowledge) {
             return res.status(200).json({
                 success: true,
@@ -35,9 +37,20 @@ export const chatController = async (
             });
         }
 
-        const response = await generateAIResponse(
+        // 3. Prepare RAG context
+        const context = JSON.stringify(
+            {
+                profile: knowledge.profile,
+                results: knowledge.results,
+            },
+            null,
+            2
+        );
+
+        // 4. Generate grounded response
+        const response = await generateRAGResponse(
             cleanMessage,
-            knowledge.results
+            context
         );
 
         return res.status(200).json({
