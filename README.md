@@ -1183,7 +1183,7 @@ More Reliable AI Responses
 The application-level relevance gate is especially important because **absence of retrieved evidence should not automatically be interpreted as proof that something is false**.
 
 **Status:** Completed ✅
-# Day 13 — Improve Accuracy 🚧
+# Day 13 — Improve Accuracy ✅
 
 Day 13 focused on improving the accuracy and grounding behavior of
 the RAG pipeline.
@@ -1216,6 +1216,297 @@ Top-K: 3
 Similarity Threshold: 0.7
 ```
 ---
+# Day 14 — Week 2 QA 🧪
+
+Day 14 focused on validating the complete RAG pipeline through functional testing, edge-case testing, retrieval-quality testing, regression testing, and targeted fixes.
+
+## QA Objectives
+
+- Verify the complete RAG pipeline end-to-end.
+- Validate retrieval behavior across different query types.
+- Test edge cases and unsupported questions.
+- Verify semantic search quality.
+- Identify retrieval and routing issues.
+- Apply minimal fixes based on actual test results.
+- Run regression tests after the fixes.
+
+## Pipeline Review
+
+The complete pipeline was reviewed:
+
+```text
+User Query
+   ↓
+Query Embedding
+   ↓
+Vector Search
+   ↓
+Relevant Knowledge
+   ↓
+Profile Context
+   ↓
+RAG Prompt
+   ↓
+Gemini
+   ↓
+Grounded Final Answer
+```
+
+**Result: PASS ✅**
+
+---
+
+## Functional Testing
+
+Tested multiple categories of queries:
+
+- Profile / education queries
+- Skills queries
+- Project queries
+- Learning journey queries
+- Backend technology queries
+- Job Tracker queries
+- ShopSphere queries
+
+The pipeline successfully generated grounded responses for the tested relevant queries.
+
+**Result: PASS ✅**
+
+---
+
+## Edge-Case Testing
+
+Tested:
+
+- Unknown professional experience
+- Irrelevant questions
+- Ambiguous questions
+- Very short queries
+- Spelling mistakes
+- Partial knowledge queries
+- Unsupported factual questions
+
+Examples included:
+
+```text
+"Google"
+"capital of France"
+"backend"
+"React?"
+"tecnologies"
+"databases and authentication"
+```
+
+The system avoided unsupported factual claims and safely handled queries where sufficient knowledge was unavailable.
+
+**Result: PASS ✅**
+
+---
+
+## RAG Quality Testing
+
+### Job Tracker Semantic Query
+
+Tested:
+
+```text
+Which applications has Prabhat built for managing jobs?
+```
+
+Initial retrieval showed:
+
+```text
+Prabhat AI   → 0.7100
+Job Tracker  → 0.6969
+```
+
+The Job Tracker result was just below the previous `0.7` threshold.
+
+After evaluation, the retrieval threshold was adjusted to:
+
+```text
+Similarity Threshold: 0.68
+Top-K: 3
+```
+
+The query then successfully retrieved Job Tracker and produced the expected grounded answer.
+
+---
+
+## Project Query Routing Fix
+
+During QA, the query:
+
+```text
+Which projects use MongoDB?
+```
+
+initially triggered the exhaustive project-list branch.
+
+This caused all directly returned projects to receive:
+
+```text
+similarity: 1
+```
+
+This was investigated and confirmed **not to be a cosine similarity bug**.
+
+The issue was caused by an overly broad `isProjectListQuery()` condition.
+
+### Fix
+
+Project-list detection was made stricter so exhaustive retrieval is triggered only for:
+
+- Explicit requests for all projects.
+- Broad questions asking what projects Prabhat has worked on.
+
+Specific project-filter queries now use semantic retrieval.
+
+---
+
+## Vector Search Verification
+
+The vector search implementation was reviewed and verified:
+
+- Dot product calculation
+- Vector magnitude calculation
+- Cosine similarity
+- Zero-vector protection
+- Similarity threshold filtering
+- Sorting by similarity
+- Top-K selection
+
+The implementation was confirmed to be correct.
+
+---
+
+## Embedding Verification
+
+The embedding implementation was also reviewed.
+
+Verified:
+
+```text
+Document → RETRIEVAL_DOCUMENT
+Query    → RETRIEVAL_QUERY
+Model    → gemini-embedding-001
+```
+
+Embedding generation and similarity calculation were confirmed to be functioning correctly.
+
+---
+
+## Final Regression Tests
+
+### 1. Full Project List
+
+Query:
+
+```text
+What projects has Prabhat worked on?
+```
+
+**Result: PASS ✅**
+
+The system correctly returned the project list and distinguished completed and in-progress projects.
+
+### 2. MongoDB Project Query
+
+Query:
+
+```text
+Which projects use MongoDB?
+```
+
+Retrieved relevant knowledge including:
+
+```text
+MongoDB Skill       → 0.7215
+ShopSphere Learning → 0.6832
+Job Tracker         → 0.6825
+```
+
+**Result: PASS ✅**
+
+The final answer correctly identified the relevant projects.
+
+### 3. Unsupported Google Query
+
+Query:
+
+```text
+Has Prabhat worked at Google?
+```
+
+**Result: PASS ✅**
+
+The system did not hallucinate professional experience and correctly stated that it did not have information confirming this.
+
+### 4. Irrelevant Query
+
+Query:
+
+```text
+What is the capital of France?
+```
+
+**Result: PASS ✅**
+
+No relevant knowledge was returned and the system did not attempt to fabricate an answer.
+
+---
+
+## Final Day 14 Retrieval Configuration
+
+After QA and regression testing:
+
+```text
+Top-K: 3
+Similarity Threshold: 0.68
+Embedding Model: gemini-embedding-001
+```
+
+> Note: `0.68` was selected based on observed retrieval behavior during QA, particularly the Job Tracker semantic query scoring `0.6969`.
+
+---
+
+## Day 14 Final Status
+
+```text
+Pipeline Review        ✅
+Functional Testing     ✅
+Edge-Case Testing      ✅
+RAG Quality Testing    ✅
+Root-Cause Analysis    ✅
+Fixes Applied          ✅
+Regression Testing     ✅
+Notes Updated          ✅
+```
+
+**Day 14 — Week 2 QA: COMPLETE ✅**
+
+**Progress: 14 / 28 days — 50%**
+
+---
+
+## Week 2 Summary
+
+The RAG foundation is now validated through:
+
+- Knowledge retrieval
+- Query embeddings
+- Vector search
+- Semantic similarity
+- Top-K retrieval
+- Relevance thresholding
+- Profile context
+- Grounded generation
+- Unsupported-query handling
+- Edge-case handling
+- Regression testing
+
+The system is now ready to move into **Day 15 — Conversation Memory**.
+---
 # 📅 28-Day Development Roadmap
 
 | Day | Focus | Status |
@@ -1232,8 +1523,8 @@ Similarity Threshold: 0.7
 | 10 | Embeddings | ✅ |
 | 11 | Vector Search & Retrieval | ✅ |
 | 12 | Chat Interface Improvements | ✅ |
-| 13 | Personal Knowledge Integration | 🚧 |
-| 14 | Retrieval Pipeline | ⬜ |
+| 13 | Personal Knowledge Integration | ✅ |
+| 14 | Retrieval Pipeline | 🚧 |
 | 15 | RAG Fundamentals | ⬜ |
 | 16 | Document Processing | ⬜ |
 | 17 | Text Chunking | ⬜ |
@@ -1249,11 +1540,11 @@ Similarity Threshold: 0.7
 | 27 | Deployment + Portfolio | ⬜ |
 | 28 | Final QA & Project Completion | ⬜ |
 
-**Current progress:** 12/28 days completed — **42.86%**
+**Current progress:** 14/28 days completed — **50%**
 
-**Current:** Day 13 — Improve Accuracy 🚧
+**Current:** Day 14 — Week 2 QA ✅
 
-**Next:** Day 14 — Week 2 QA (after Day 13 is completed)
+**Next:** Day 15 — Conversation Memory
 
 ---
 # 🧠 AI Development Strategy
@@ -1500,7 +1791,10 @@ Day 08  ████████████████████████
 Day 09  ████████████████████████████████  ✅
 Day 10  ████████████████████████████████  ✅
 Day 11  ████████████████████████████████  ✅
-Day 12  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
+Day 12  ████████████████████████████████  ✅
+Day 13  ████████████████████████████████  ✅
+Day 14  ████████████████████████████████  ✅
+Day 15  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
 ...
 Day 28  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ⬜
 ```
@@ -1508,11 +1802,13 @@ Day 28  ░░░░░░░░░░░░░░░░░░░░░░░░
 ## 📊 Current Progress
 
 ```text
-11 / 28 days completed
-39.29%
 
-Current: Day 11 — Vector Search & Retrieval ✅
-Next: Day 12 — Chat Interface Improvements
+**Current progress:** 14/28 days completed — **50%**
+
+**Current:** Day 14 — Week 2 QA ✅
+
+**Next:** Day 15 — Conversation Memory
+
 ```
 ---
 ## Current Development Focus
@@ -1625,13 +1921,3 @@ Prabhat AI is being built as a practical learning project to explore:
 **Improving every day.**
 
 > One day. One feature. One commit at a time. 🚀
-
-### Current Prabhat AI Status
-
-**Overall Progress: 10/28 days (35.71%)**
-
-[██████████░░░░░░░░░░] Day 11 in progress
-
-**Current Task:** Day 11 — Step 5: Notes + Git
-
-**Next:** Day 12 — Chat Interface Improvements (after Day 11 is completed)

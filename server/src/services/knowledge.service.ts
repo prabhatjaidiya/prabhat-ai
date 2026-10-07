@@ -10,7 +10,7 @@ import {
 } from "./vector-search.service.js";
 
 const MIN_RELEVANCE_SCORE = Number(
-    process.env.RAG_MIN_RELEVANCE_SCORE || "0.7"
+    process.env.RAG_MIN_RELEVANCE_SCORE || "0.68"
 );
 
 type KnowledgeResult = {
@@ -44,30 +44,22 @@ function toAIContext(
     );
 }
 
-function isProjectListQuery(
-    message: string
-): boolean {
-    const normalizedMessage =
-        message.toLowerCase();
+function isProjectListQuery(message: string): boolean {
+    const normalizedMessage = message.toLowerCase().trim();
 
-    const mentionsProjects =
-        /\bprojects?\b/.test(
+    const explicitListRequest =
+        /\b(all|every|list all|show all|give me all)\b/.test(
             normalizedMessage
         );
 
-    const asksForList =
-        /\b(all|every|list|which|what|tell me about|show me)\b/.test(
-            normalizedMessage
-        );
-
-    const asksWhatBuilt =
-        /\b(worked on|built|developed|created|made)\b/.test(
+    const broadProjectRequest =
+        /\b(what projects has|what projects have|which projects has|which projects have)\b/.test(
             normalizedMessage
         );
 
     return (
-        mentionsProjects &&
-        (asksForList || asksWhatBuilt)
+        /\bprojects?\b/.test(normalizedMessage) &&
+        (explicitListRequest || broadProjectRequest)
     );
 }
 
@@ -99,14 +91,13 @@ export async function retrieveKnowledge(
                 content:
                     `${project.title}. ` +
                     `${project.description}. ` +
-                    `Technologies: ${
-                        Array.isArray(
-                            project.technologies
+                    `Technologies: ${Array.isArray(
+                        project.technologies
+                    )
+                        ? project.technologies.join(
+                            ", "
                         )
-                            ? project.technologies.join(
-                                  ", "
-                              )
-                            : ""
+                        : ""
                     }`,
                 similarity: 1,
             })
@@ -178,14 +169,13 @@ export async function retrieveKnowledge(
         const content =
             `${project.title}. ` +
             `${project.description}. ` +
-            `Technologies: ${
-                Array.isArray(
-                    project.technologies
+            `Technologies: ${Array.isArray(
+                project.technologies
+            )
+                ? project.technologies.join(
+                    ", "
                 )
-                    ? project.technologies.join(
-                          ", "
-                      )
-                    : ""
+                : ""
             }`;
 
         documents.push({
