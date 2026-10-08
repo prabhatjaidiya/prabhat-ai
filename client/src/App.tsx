@@ -22,12 +22,23 @@ function App() {
     setMessages((current) => [...current, userMessage])
 
     try {
+      const conversationId =
+        localStorage.getItem("conversationId") ||
+        crypto.randomUUID();
+
+      localStorage.setItem(
+        "conversationId",
+        conversationId
+      );
       const response = await fetch('http://localhost:5000/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({
+          conversationId,
+          message,
+        }),
       })
 
       const data = await response.json()

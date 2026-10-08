@@ -1,13 +1,17 @@
 import { Request, Response } from "express";
 import { generateRAGResponse } from "../services/ai.service.js";
 import { retrieveKnowledge } from "../services/knowledge.service.js";
+import {
+    addMessage,
+    getConversationHistory,
+} from "../services/memory.service.js";
 
 export const chatController = async (
     req: Request,
     res: Response
 ) => {
     try {
-        const { message } = req.body;
+        const { message, conversationId } = req.body;
 
         if (
             !message ||
@@ -20,22 +24,40 @@ export const chatController = async (
             });
         }
 
-        const cleanMessage = message.trim();
+        if (
+            !conversationId ||
+            typeof conversationId !== "string" ||
+            !conversationId.trim()
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Conversation ID is required",
+            });
+        }
 
-        // 1. Retrieve relevant knowledge
+        const cleanMessage = message.trim();
+        const cleanConversationId =
+            conversationId.trim();
+
+        // 1. Get previous conversation history
+        const conversationHistory =
+            getConversationHistory(
+                cleanConversationId
+            );
+
+        console.log(
+            "Conversation history:",
+            conversationHistory
+        );
+
+        // 2. Retrieve relevant knowledge
         const knowledge =
             await retrieveKnowledge(cleanMessage);
 
-        console.log("Retrieved knowledge:", knowledge);
-
-        // 2. Stop if no relevant semantic knowledge exists
-        if (!knowledge.hasRelevantKnowledge) {
-            return res.status(200).json({
-                success: true,
-                response:
-                    "I don't have enough information in my current knowledge to answer that question.",
-            });
-        }
+        console.log(
+            "Retrieved knowledge:",
+            knowledge
+        );
 
         // 3. Prepare RAG context
         const context = JSON.stringify(
@@ -47,18 +69,36 @@ export const chatController = async (
             2
         );
 
-        // 4. Generate grounded response
-        const response = await generateRAGResponse(
-            cleanMessage,
-            context
-        );
+        // 4. Generate response using
+        // conversation history + RAG context
+        const response =
+            await generateRAGResponse(
+                cleanMessage,
+                context,
+                conversationHistory
+            );
+
+        // 5. Save user message
+        addMessage(cleanConversationId, {
+            role: "user",
+            content: cleanMessage,
+        });
+
+        // 6. Save assistant response
+        addMessage(cleanConversationId, {
+            role: "assistant",
+            content: response,
+        });
 
         return res.status(200).json({
             success: true,
             response,
         });
     } catch (error) {
-        console.error("Chat controller error:", error);
+        console.error(
+            "Chat controller error:",
+            error
+        );
 
         return res.status(500).json({
             success: false,

@@ -216,25 +216,29 @@ prabhat-ai/
 ├── client/
 │   ├── src/
 │   │   ├── assets/
+│   │   │
 │   │   ├── components/
 │   │   │   ├── ChatHeader.tsx
 │   │   │   ├── ChatInput.tsx
 │   │   │   ├── MessageBubble.tsx
 │   │   │   └── MessageList.tsx
+│   │   │
 │   │   ├── App.tsx
 │   │   ├── index.css
 │   │   └── main.tsx
+│   │
 │   ├── package.json
 │   └── vite.config.ts
 │
 ├── server/
 │   ├── src/
+│   │   │
 │   │   ├── config/
 │   │   │   ├── db.ts
 │   │   │   └── systemPrompt.ts
 │   │   │
 │   │   ├── controllers/
-│   │   │   └── chat.controller.ts
+│   │   │   └── chat.controller.ts   
 │   │   │
 │   │   ├── middleware/
 │   │   │
@@ -249,14 +253,16 @@ prabhat-ai/
 │   │   │   └── chat.routes.ts
 │   │   │
 │   │   ├── services/
-│   │   │   ├── ai.service.ts
+│   │   │   ├── ai.service.ts           
 │   │   │   ├── embedding.service.ts
 │   │   │   ├── knowledge.service.ts
 │   │   │   ├── vector-search.service.ts
 │   │   │   ├── context.service.ts
-│   │   │   └── rag.service.ts
+│   │   │   ├── rag.service.ts
+│   │   │   └── memory.service.ts        
 │   │   │
 │   │   ├── seed/
+│   │   │
 │   │   ├── app.ts
 │   │   └── server.ts
 │   │
@@ -1506,6 +1512,510 @@ The RAG foundation is now validated through:
 - Regression testing
 
 The system is now ready to move into **Day 15 — Conversation Memory**.
+
+---
+# Day 15 — Conversation Memory 🧠
+
+Day 15 focused on adding short-term conversation memory to Prabhat AI so the assistant can remember previous messages within the same conversation, understand follow-up questions, and use conversation history alongside the existing RAG pipeline.
+
+## Memory Objectives
+
+- Understand conversation memory and its purpose.
+- Separate conversation memory from the RAG knowledge base.
+- Design a conversation-history structure.
+- Introduce conversation IDs.
+- Store user and assistant messages.
+- Retrieve recent conversation history.
+- Pass conversation history to Gemini.
+- Combine conversation context with RAG context.
+- Test multi-turn conversations.
+- Verify conversation isolation.
+- Limit the amount of history passed to the model.
+- Check for unwanted context leakage.
+
+---
+
+## Conversation Memory vs RAG
+
+Conversation memory and RAG serve different purposes.
+
+### Conversation Memory
+
+Conversation memory provides short-term context from the current conversation.
+
+It helps Prabhat AI understand questions such as:
+
+```text
+User: My main project is ShopSphere.
+
+Later:
+User: What did I just tell you?
+```
+
+The assistant can use the previous message to understand the follow-up question.
+
+### RAG Knowledge
+
+RAG retrieves relevant factual information from Prabhat AI's persistent knowledge base.
+
+For example:
+
+```text
+User: What database did I use for ShopSphere?
+```
+
+The RAG pipeline can retrieve relevant ShopSphere knowledge from the database.
+
+### Combined Architecture
+
+```text
+Conversation Memory → Current conversational context
+RAG                 → Persistent factual knowledge
+```
+
+Both are passed separately to Gemini so conversational context does not replace factual retrieval.
+
+---
+
+## Memory Flow Design
+
+The Day 15 conversation flow was designed as:
+
+```text
+User Message
+    ↓
+Conversation ID
+    ↓
+Retrieve Recent Conversation History
+    ↓
+Query Embedding
+    ↓
+Vector Search
+    ↓
+Relevant Knowledge
+    ↓
+Conversation History + RAG Context
+    ↓
+Gemini
+    ↓
+AI Response
+    ↓
+Save User Message + Assistant Response
+```
+
+This extends the existing RAG pipeline without replacing it.
+
+---
+
+## Message Structure
+
+Conversation messages use a simple structure:
+
+```text
+{
+    role: "user" | "assistant",
+    content: string
+}
+```
+
+Example:
+
+```text
+[
+    {
+        role: "user",
+        content: "My main project is ShopSphere."
+    },
+    {
+        role: "assistant",
+        content: "ShopSphere is one of Prabhat's projects."
+    }
+]
+```
+
+This allows the assistant to preserve the order and role of each message.
+
+---
+
+## Conversation Identification
+
+A `conversationId` was introduced so separate conversations can maintain independent histories.
+
+Example request:
+
+```text
+{
+    "conversationId": "test-001",
+    "message": "What did I just tell you?"
+}
+```
+
+Messages using the same conversation ID share history.
+
+Different conversation IDs remain isolated.
+
+```text
+test-001 ≠ test-002
+```
+
+This prevents one conversation's short-term context from leaking into another.
+
+---
+
+## Memory Service
+
+A new service was introduced:
+
+```text
+server/src/services/memory.service.ts
+```
+
+The memory service is responsible for:
+
+- Storing conversation messages.
+- Retrieving conversation history.
+- Limiting the history window.
+- Separating conversations by ID.
+- Clearing a conversation when required.
+
+For the Day 15 implementation, memory is stored using an in-memory `Map`.
+
+Conceptually:
+
+```text
+Map<
+    conversationId,
+    ConversationMessage[]
+>
+```
+
+This keeps the initial implementation simple while preserving a clean separation between memory logic and the existing RAG services.
+
+---
+
+## Conversation History Limit
+
+Unlimited conversation history is not sent to Gemini.
+
+The current configuration is:
+
+```text
+MAX_HISTORY_MESSAGES = 10
+```
+
+The system retrieves:
+
+```text
+history.slice(-10)
+```
+
+This means only the latest 10 individual user/assistant messages are included in the context sent to Gemini.
+
+Older messages remain outside the active history window.
+
+This prevents conversation context from growing indefinitely.
+
+---
+
+## RAG + Conversation Memory Integration
+
+The existing `generateRAGResponse()` flow was extended to receive conversation history separately from retrieved knowledge.
+
+The conceptual function flow became:
+
+```text
+generateRAGResponse(
+    question,
+    context,
+    conversationHistory
+)
+```
+
+The Gemini prompt now contains separate sections:
+
+```text
+<conversation_history>
+Previous conversation messages
+</conversation_history>
+
+<retrieved_knowledge>
+Relevant RAG knowledge
+</retrieved_knowledge>
+
+<user_question>
+Current user question
+</user_question>
+```
+
+Keeping these sections separate makes their responsibilities clear.
+
+Conversation history helps interpret the conversation.
+
+Retrieved knowledge remains the primary factual source for stored personal information.
+
+---
+
+## Controller Integration
+
+The chat controller was updated to:
+
+1. Validate the user message.
+2. Validate the conversation ID.
+3. Retrieve previous conversation history.
+4. Retrieve relevant RAG knowledge.
+5. Prepare the RAG context.
+6. Send conversation history, knowledge, and the current question to Gemini.
+7. Save the user message.
+8. Save the assistant response.
+
+The previous unconditional early return for missing semantic knowledge was removed from this flow so conversation-only follow-up questions can still be answered from available conversation history.
+
+---
+
+## Multi-Turn Conversation Testing
+
+A conversation was tested using the same conversation ID.
+
+Example:
+
+```text
+User:
+My favorite frontend technology is React.
+
+User:
+I am building an AI project called Prabhat AI.
+
+User:
+What frontend technology did I say I like?
+```
+
+Prabhat AI responded that the user had said their favorite frontend technology was React.
+
+**Result: PASS ✅**
+
+This confirmed that information from earlier turns was available to later requests.
+
+---
+
+## Follow-Up Question Testing
+
+Test conversation:
+
+```text
+User:
+My main project is ShopSphere.
+
+Later:
+What did I just tell you?
+```
+
+Prabhat AI correctly responded that the user had said their main project was ShopSphere.
+
+**Result: PASS ✅**
+
+This confirmed that the assistant could resolve follow-up questions using conversation history.
+
+---
+
+## Memory + RAG Testing
+
+A follow-up question was tested:
+
+```text
+What database did I use?
+```
+
+The system used the current conversation context together with available retrieved knowledge to generate the response.
+
+This verified the intended architecture:
+
+```text
+Conversation Memory
+        +
+       RAG
+        ↓
+      Gemini
+```
+
+**Result: PASS ✅**
+
+---
+
+## Conversation Isolation Testing
+
+A second conversation ID was created without the previous conversation history.
+
+Example:
+
+```text
+conversationId: test-002
+```
+
+The assistant correctly reported that it did not have the previous conversation information.
+
+This confirmed:
+
+```text
+Conversation A history
+        ≠
+Conversation B history
+```
+
+No conversation-history leakage was observed.
+
+**Result: PASS ✅**
+
+---
+
+## History Limit Testing
+
+A dedicated conversation was populated with multiple messages:
+
+```text
+Message 1
+Message 2
+Message 3
+...
+Message 11
+```
+
+The final conversation-history diagnostics showed:
+
+```text
+historyMessages: 10
+```
+
+The retained history contained the latest user/assistant message pairs, including:
+
+```text
+Message 7
+Message 8
+Message 9
+Message 10
+Message 11
+```
+
+Older messages were outside the active history window.
+
+The assistant was still able to identify Message 11 from the retained conversation context.
+
+**Result: PASS ✅**
+
+---
+
+## Context Leakage Testing
+
+Different conversation IDs were tested to ensure previous messages were not accidentally shared across conversations.
+
+The new conversation started with an empty conversation history and did not have access to information provided only in the previous conversation.
+
+**Result: PASS ✅**
+
+---
+
+## Day 15 Project Changes
+
+### New File
+
+```text
+server/src/services/memory.service.ts
+```
+
+Responsible for short-term conversation-history management.
+
+### Updated Files
+
+```text
+server/src/controllers/chat.controller.ts
+server/src/services/ai.service.ts
+```
+
+`chat.controller.ts` now manages conversation IDs, retrieves history, and stores new messages.
+
+`ai.service.ts` now passes conversation history separately from retrieved RAG knowledge to Gemini.
+
+---
+
+## Current Limitation
+
+The Day 15 implementation uses in-memory storage.
+
+Therefore:
+
+```text
+Server Restart
+      ↓
+In-Memory Map Reset
+      ↓
+Conversation History Lost
+```
+
+Conversation history is not yet persistent across server restarts.
+
+This is acceptable for the Day 15 foundation because the goal was to implement and validate the conversation-memory flow without prematurely adding database persistence.
+
+Future improvements can introduce persistent conversation storage if required.
+
+---
+
+## Day 15 Testing Summary
+
+```text
+Conversation Memory Concept       ✅
+Memory vs RAG Separation          ✅
+Memory Flow Design                ✅
+Conversation ID Handling          ✅
+Message Storage                   ✅
+History Retrieval                 ✅
+Gemini History Integration        ✅
+Multi-Turn Conversation           ✅
+Follow-Up Questions               ✅
+Memory + RAG                      ✅
+Conversation Isolation            ✅
+10-Message History Limit          ✅
+Old Context Removal               ✅
+Context Leakage Check             ✅
+```
+
+---
+
+## Day 15 Final Status
+
+```text
+Concept Review              ✅
+Memory Architecture         ✅
+Memory Service              ✅
+Controller Integration      ✅
+Gemini Integration          ✅
+Multi-Turn Testing          ✅
+Follow-Up Testing           ✅
+Conversation Isolation      ✅
+History Limit Testing       ✅
+Notes Updated               ✅
+Git / Final Verification    ⏳
+```
+
+**Day 15 — Conversation Memory: IN PROGRESS 🟡**
+
+**Official Progress: 14 / 28 days — 50%**
+
+Day 15 will be marked complete only after the final TypeScript/Git verification and explicit completion confirmation.
+
+---
+
+## Next Step
+
+Complete the final project checks:
+
+```text
+npx tsc --noEmit
+git status
+```
+
+After the Day 15 work is verified and committed, the project will be ready to move forward to the next roadmap day.
+
+Do not start Day 16 until Day 15 is explicitly confirmed complete.
+
 ---
 # 📅 28-Day Development Roadmap
 
@@ -1524,8 +2034,8 @@ The system is now ready to move into **Day 15 — Conversation Memory**.
 | 11 | Vector Search & Retrieval | ✅ |
 | 12 | Chat Interface Improvements | ✅ |
 | 13 | Personal Knowledge Integration | ✅ |
-| 14 | Retrieval Pipeline | 🚧 |
-| 15 | RAG Fundamentals | ⬜ |
+| 14 | Retrieval Pipeline | ✅ |
+| 15 | RAG Fundamentals | 🚧 |
 | 16 | Document Processing | ⬜ |
 | 17 | Text Chunking | ⬜ |
 | 18 | RAG Integration | ⬜ |
@@ -1542,9 +2052,9 @@ The system is now ready to move into **Day 15 — Conversation Memory**.
 
 **Current progress:** 14/28 days completed — **50%**
 
-**Current:** Day 14 — Week 2 QA ✅
+**Current:** Day 15 — Conversation Memory ✅
 
-**Next:** Day 15 — Conversation Memory
+**Next:** Day 16 — Document Processing
 
 ---
 # 🧠 AI Development Strategy
