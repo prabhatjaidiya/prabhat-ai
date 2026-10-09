@@ -63,6 +63,18 @@ function isProjectListQuery(message: string): boolean {
     );
 }
 
+
+function getProjectNameFromQuery(
+    message: string,
+    projectTitles: string[]
+): string | undefined {
+    const normalizedMessage = message.toLowerCase();
+
+    return projectTitles.find((title) =>
+        normalizedMessage.includes(title.toLowerCase())
+    );
+}
+
 export async function retrieveKnowledge(
     message: string
 ): Promise<KnowledgeResult> {
@@ -213,23 +225,41 @@ export async function retrieveKnowledge(
         });
     }
 
-    // 6. Semantic vector search
-    const searchResults =
-        searchVectors(
-            queryVector,
-            documents,
-            3,
-            MIN_RELEVANCE_SCORE
-        );
+
+    // 6. Detect explicit project-specific questions
+    const projectName = getProjectNameFromQuery(
+        message,
+        projects.map((project) => project.title)
+    );
+
+    const relevantDocuments = projectName
+        ? documents.filter(
+            (document) =>
+                document.type === "project" &&
+                document.content
+                    .toLowerCase()
+                    .startsWith(projectName.toLowerCase() + ".")
+        )
+        : documents;
+
+    // 7. Semantic vector search
+    const searchResults = searchVectors(
+        queryVector,
+        relevantDocuments,
+        3,
+        MIN_RELEVANCE_SCORE
+    );
 
     // 7. Prepare AI-safe context
-    const results =
-        toAIContext(searchResults);
+    const results = toAIContext(searchResults).filter(
+        (result) => result.similarity >= 0.72
+    );
 
     return {
         profile,
         results,
-        hasRelevantKnowledge:
-            results.length > 0,
+        hasRelevantKnowledge: results.some(
+            (result) => result.similarity >= 0.72
+        ),
     };
 }
