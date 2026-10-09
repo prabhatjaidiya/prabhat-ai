@@ -2017,6 +2017,61 @@ After the Day 15 work is verified and committed, the project will be ready to mo
 Do not start Day 16 until Day 15 is explicitly confirmed complete.
 
 ---
+# Day 16 — Project Knowledge ✅
+
+## Goal
+
+Improve project-specific knowledge retrieval, reduce irrelevant context passed to the Gemini model, and verify that Prabhat AI answers project questions accurately without inventing unsupported information.
+
+## Completed
+
+- Added and verified project-specific knowledge retrieval.
+- Implemented a provisional similarity threshold of `0.72` for retrieved results.
+- Filtered results below the threshold from normal semantic retrieval context.
+- Improved unknown-question handling by returning an empty result list when no results meet the threshold.
+- Updated RAG instructions to prioritize grounded answers and distinguish completed, in-progress, and planned work.
+- Synchronized project knowledge and learning progress through the seed script.
+- Tested relevant project questions, unknown questions, exhaustive project listing, and implementation-status accuracy.
+
+## Relevance Filtering
+
+Normal semantic retrieval keeps results with a similarity score of at least `0.72`.
+
+```ts
+const results = toAIContext(searchResults).filter(
+    (result) => result.similarity >= 0.72
+);
+```
+
+The threshold is provisional. Similarity scores alone do not guarantee semantic relevance, so retrieval quality must continue to be evaluated using test questions.
+
+## Regression Testing
+
+| Test | Expected behavior | Result |
+|---|---|---|
+| ShopSphere technology query | Retrieve relevant project knowledge | Passed |
+| Unknown banking-project query | Return no relevant results and avoid invented facts | Passed |
+| List all projects | Return all six project records | Passed |
+| ShopSphere implementation status | Separate implemented features from planned work | Passed |
+| TypeScript verification | No compiler errors | Passed |
+| Git verification | Clean working tree after commit | Passed |
+
+## Key Learning
+
+- A non-empty retrieval result does not necessarily mean the result is relevant.
+- Similarity thresholds can reduce irrelevant context, but they require testing and calibration.
+- Unknown questions should not trigger invented personal or project information.
+- Exhaustive queries such as listing all projects need a separate retrieval path.
+- Project documentation must distinguish completed features from planned milestones.
+
+## Day 16 Status
+
+Project knowledge retrieval improvements and regression testing are documented. The Git checkpoint was committed locally, and the working tree was verified as clean. The local branch was one commit ahead of the remote at the last check.
+
+## Next Step
+
+Day 17 — continue the Prabhat AI roadmap with the next planned milestone.
+---
 # 📅 28-Day Development Roadmap
 
 | Day | Focus | Status |
@@ -2035,9 +2090,9 @@ Do not start Day 16 until Day 15 is explicitly confirmed complete.
 | 12 | Chat Interface Improvements | ✅ |
 | 13 | Personal Knowledge Integration | ✅ |
 | 14 | Retrieval Pipeline | ✅ |
-| 15 | RAG Fundamentals | 🚧 |
-| 16 | Document Processing | ⬜ |
-| 17 | Text Chunking | ⬜ |
+| 15 | RAG Fundamentals | ✅ |
+| 16 | Document Processing | ✅ |
+| 17 | Text Chunking | 🚧 |
 | 18 | RAG Integration | ⬜ |
 | 19 | Context-Aware AI | ⬜ |
 | 20 | Chat Improvements | ⬜ |
@@ -2050,11 +2105,11 @@ Do not start Day 16 until Day 15 is explicitly confirmed complete.
 | 27 | Deployment + Portfolio | ⬜ |
 | 28 | Final QA & Project Completion | ⬜ |
 
-**Current progress:** 14/28 days completed — **50%**
+**Current progress:** 16/28 days completed — **57.14%**
 
-**Current:** Day 15 — Conversation Memory ✅
+**Current:** Day 16 — Document Processing ✅
 
-**Next:** Day 16 — Document Processing
+**Next:** Day 17 — Upcoming Milestone
 
 ---
 # 🧠 AI Development Strategy
