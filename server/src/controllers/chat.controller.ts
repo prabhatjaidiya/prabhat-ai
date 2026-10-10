@@ -5,6 +5,7 @@ import {
     addMessage,
     getConversationHistory,
 } from "../services/memory.service.js";
+import { getPublicRepositories } from "../services/github.service.js";
 
 export const chatController = async (
     req: Request,
@@ -54,6 +55,24 @@ export const chatController = async (
         const knowledge =
             await retrieveKnowledge(cleanMessage);
 
+        let githubContext;
+
+        try {
+            const repositories = await getPublicRepositories();
+
+            githubContext = {
+                status: "available",
+                repositories,
+            };
+        } catch (error) {
+            console.error("GitHub retrieval error:", error);
+
+            githubContext = {
+                status: "unavailable",
+                message: "GitHub repository data could not be retrieved.",
+            };
+        }
+
         console.log(
             "Retrieved knowledge:",
             knowledge
@@ -64,10 +83,20 @@ export const chatController = async (
             {
                 profile: knowledge.profile,
                 results: knowledge.results,
+                github: githubContext,
             },
             null,
             2
         );
+
+        console.log("GitHub context diagnostics:", {
+            included: context.includes('"github"'),
+            status: githubContext.status,
+            repositoryCount:
+                githubContext.status === "available"
+                    ? (githubContext.repositories?.length ?? 0)
+                    : 0,
+        });
 
         // 4. Generate response using
         // conversation history + RAG context
