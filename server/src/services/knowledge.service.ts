@@ -63,6 +63,38 @@ function isProjectListQuery(message: string): boolean {
     );
 }
 
+function isLearningRoadmapListQuery(message: string): boolean {
+    const normalizedMessage = message.toLowerCase().trim();
+
+    const asksForAll =
+        /\b(all|every|list|show|which|what)\b/.test(
+            normalizedMessage
+        );
+
+    const mentionsLearning =
+        /\b(learning roadmaps?|learning paths?|roadmaps?)\b/.test(
+            normalizedMessage
+        );
+
+    const asksForNextSteps =
+        /\b(what should i complete next|what should i do next|next steps|what comes next)\b/.test(
+            normalizedMessage
+        );
+
+    const mentionsMultipleProjects =
+        /\b(in each|both|two|projects)\b/.test(normalizedMessage);
+
+    const asksForProgressAndNextTasks =
+        /\b(progress|completion percentage|completion status|next task|next tasks)\b/.test(
+            normalizedMessage
+        ) && mentionsLearning;
+
+    return (
+        (asksForAll && mentionsLearning) ||
+        (asksForNextSteps && mentionsMultipleProjects) ||
+        asksForProgressAndNextTasks
+    );
+}
 
 function getProjectNameFromQuery(
     message: string,
@@ -120,6 +152,35 @@ export async function retrieveKnowledge(
             results,
             hasRelevantKnowledge:
                 results.length > 0,
+        };
+    }
+
+    /*
+     * ------------------------------------------------
+     * LEARNING ROADMAP LIST / EXHAUSTIVE RETRIEVAL
+     * ------------------------------------------------
+     */
+    if (isLearningRoadmapListQuery(message)) {
+        const [profile, learning] = await Promise.all([
+            Profile.findOne().lean(),
+            Learning.find().lean(),
+        ]);
+
+        const results = learning.map((item) => ({
+            id: String(item._id),
+            type: "learning" as const,
+            content:
+                `${item.topic}. ` +
+                `${item.description}. ` +
+                `Status: ${item.status}. ` +
+                `Progress: ${item.progress}%`,
+            similarity: 1,
+        }));
+
+        return {
+            profile,
+            results,
+            hasRelevantKnowledge: results.length > 0,
         };
     }
 
