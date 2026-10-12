@@ -170,7 +170,7 @@ const seedProfile = async (): Promise<void> => {
             {
                 title: "ShopSphere",
                 description:
-                    "A full-stack e-commerce platform in development. Completed work includes the React and TypeScript frontend foundation, reusable components, customer-facing layouts and routes, product listing and detail pages, search, category and price filtering, sorting, cart state management, and an Express and TypeScript backend. MongoDB and Mongoose provide database models and product data persistence. Product APIs support listing, details, pagination, search, and filtering. Registration, login, JWT authentication, authentication middleware, and role-based protected routes have also been implemented. Cart and wishlist backend functionality remains a separate planned milestone.",
+                    "A full-stack e-commerce platform in development. Implemented the React and TypeScript frontend foundation, reusable components, product listing and detail pages, search, filtering, sorting, and cart state management. The Express and TypeScript backend uses MongoDB and Mongoose. Product APIs support listing, details, pagination, search, and filtering. Registration, login, JWT authentication, and role-based protected routes are implemented. Cart and wishlist backend functionality is complete, including CRUD operations, product and quantity validation, stock checks, customer-only access, duplicate prevention, and MongoDB persistence. Next: frontend-backend integration.",
                 technologies: [
                     "React",
                     "TypeScript",
@@ -192,7 +192,7 @@ const seedProfile = async (): Promise<void> => {
             {
                 title: "Prabhat AI",
                 description:
-                    "A personal AI agent representing Prabhat Jaidiya. The project uses Gemini API integration and structured knowledge about the developer's profile, skills, projects, and learning journey. Implemented capabilities include system instructions, MongoDB-based knowledge retrieval, Gemini embeddings, cosine-similarity vector search, top-K retrieval, relevance threshold filtering, a retrieval-augmented generation (RAG) pipeline, retrieval accuracy checks, and conversation memory with conversation IDs and bounded message history. Project-specific knowledge retrieval is being improved as part of the ongoing development roadmap.",
+                    "A personal AI agent representing Prabhat Jaidiya. Built using TypeScript, Node.js, MongoDB, and the Google Gemini API. Implemented structured knowledge retrieval, system instructions, Gemini embeddings, cosine-similarity vector search, top-K retrieval, relevance filtering, a RAG pipeline, retrieval accuracy improvements, conversation memory, document processing, and GitHub integration with error-handling and regression testing. Day 17 is complete. Next: Day 18, Learning Progress.",
                 technologies: [
                     "TypeScript",
                     "Node.js",
@@ -230,23 +230,23 @@ const seedProfile = async (): Promise<void> => {
             {
                 topic: "Node.js → MERN Roadmap",
                 description:
-                    "A 42-day learning roadmap covering Node.js fundamentals, Express.js, MongoDB, Mongoose, authentication, authorization, production backend architecture, and React-to-Node.js integration. Day 40, Production Backend Architecture, is complete. Next: Day 41, React + Node.js Integration.",
-                status: "In Progress",
-                progress: 95.24,
+                    "Completed the full 42-day Node.js → MERN learning roadmap. Covered Node.js fundamentals, Express.js, REST APIs, MongoDB, Mongoose, authentication, authorization, backend security, production architecture, and React-to-Node.js integration. Day 42, Final MERN Roadmap Review, is complete.",
+                status: "Completed",
+                progress: 100,
             },
             {
                 topic: "ShopSphere",
                 description:
-                    "A 28-day full-stack e-commerce project covering customer-facing UI, product APIs, MongoDB persistence, authentication, role-based authorization, cart and wishlist functionality, and further full-stack integration. Day 12, Roles & Protected Routes, is complete. Next: Day 13, Cart & Wishlist Backend.",
+                    "A 28-day full-stack e-commerce project covering customer-facing UI, product APIs, MongoDB persistence, authentication, role-based authorization, cart and wishlist functionality, and frontend-backend integration. Day 14 — Frontend-Backend Integration is complete. Next: Day 15, according to the confirmed roadmap.",
                 status: "In Progress",
-                progress: 42.86,
+                progress: 50,
             },
             {
                 topic: "Prabhat AI",
                 description:
-                    "A 28-day project-based learning journey to build a personal AI agent with structured knowledge, embeddings, vector search, RAG, retrieval accuracy improvements, and conversation memory. Day 15, Conversation Memory, is complete. Next: Day 16, Project Knowledge.",
+                    "A 28-day project-based learning journey to build a personal AI agent with structured knowledge retrieval, Gemini embeddings, vector search, RAG, retrieval accuracy improvements, conversation memory, document processing, and GitHub integration. Day 17, GitHub Integration, is complete. Next: Day 18, Learning Progress.",
                 status: "In Progress",
-                progress: 53.57,
+                progress: 60.71,
             },
         ];
 

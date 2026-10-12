@@ -226,20 +226,35 @@ export async function retrieveKnowledge(
     }
 
 
+
     // 6. Detect explicit project-specific questions
     const projectName = getProjectNameFromQuery(
         message,
         projects.map((project) => project.title)
     );
 
+    const normalizedProjectName =
+        projectName?.toLowerCase();
+
     const relevantDocuments = projectName
-        ? documents.filter(
-            (document) =>
-                document.type === "project" &&
-                document.content
-                    .toLowerCase()
-                    .startsWith(projectName.toLowerCase() + ".")
-        )
+        ? documents.filter((document) => {
+            const normalizedContent =
+                document.content.toLowerCase();
+
+            if (document.type === "project") {
+                return normalizedContent.startsWith(
+                    normalizedProjectName + "."
+                );
+            }
+
+            if (document.type === "learning") {
+                return normalizedContent.startsWith(
+                    normalizedProjectName + "."
+                );
+            }
+
+            return false;
+        })
         : documents;
 
     // 7. Semantic vector search
