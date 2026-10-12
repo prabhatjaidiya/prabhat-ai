@@ -237,7 +237,7 @@ const seedProfile = async (): Promise<void> => {
             {
                 topic: "ShopSphere",
                 description:
-                    "A 28-day full-stack e-commerce project covering customer-facing UI, product APIs, MongoDB persistence, authentication, role-based authorization, cart and wishlist functionality, and frontend-backend integration. Day 14 — Frontend-Backend Integration is complete. Next: Day 15, according to the confirmed roadmap.",
+                    "A 28-day full-stack e-commerce project covering customer-facing UI, product APIs, MongoDB persistence, authentication, role-based authorization, cart and wishlist functionality, and frontend-backend integration. Day 14, Frontend-Backend Integration, is complete. Next: Day 15, as defined in the confirmed roadmap.",
                 status: "In Progress",
                 progress: 50,
             },

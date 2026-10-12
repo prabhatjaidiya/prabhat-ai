@@ -266,9 +266,7 @@ export async function retrieveKnowledge(
     );
 
     // 7. Prepare AI-safe context
-    const results = toAIContext(searchResults).filter(
-        (result) => result.similarity >= 0.72
-    );
+    const results = toAIContext(searchResults);
 
     return {
         profile,
