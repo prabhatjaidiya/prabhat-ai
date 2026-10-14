@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { generateRAGResponse } from "../services/ai.service.js";
+import {
+    generateRAGResponse,
+    resolveContextualQuery,
+} from "../services/ai.service.js";
 import { retrieveKnowledge } from "../services/knowledge.service.js";
 import {
     addMessage,
@@ -37,24 +40,29 @@ export const chatController = async (
         }
 
         const cleanMessage = message.trim();
-        const cleanConversationId =
-            conversationId.trim();
+        const cleanConversationId = conversationId.trim();
 
         // 1. Get previous conversation history
         const conversationHistory =
-            getConversationHistory(
-                cleanConversationId
-            );
+            getConversationHistory(cleanConversationId);
 
-        console.log(
-            "Conversation history:",
+        console.log("Conversation history:", conversationHistory);
+
+        // 2. Resolve contextual references before retrieval
+        const resolvedQuery = await resolveContextualQuery(
+            cleanMessage,
             conversationHistory
         );
 
-        // 2. Retrieve relevant knowledge
-        const knowledge =
-            await retrieveKnowledge(cleanMessage);
+        console.log("Query resolution diagnostics:", {
+            originalQuestion: cleanMessage,
+            resolvedQuery,
+        });
 
+        // 3. Retrieve knowledge using the resolved query
+        const knowledge = await retrieveKnowledge(resolvedQuery);
+
+        // 4. Retrieve GitHub repository context
         let githubContext;
 
         try {
@@ -69,16 +77,14 @@ export const chatController = async (
 
             githubContext = {
                 status: "unavailable",
-                message: "GitHub repository data could not be retrieved.",
+                message:
+                    "GitHub repository data could not be retrieved.",
             };
         }
 
-        console.log(
-            "Retrieved knowledge:",
-            knowledge
-        );
+        console.log("Retrieved knowledge:", knowledge);
 
-        // 3. Prepare RAG context
+        // 5. Assemble RAG context
         const context = JSON.stringify(
             {
                 profile: knowledge.profile,
@@ -98,22 +104,21 @@ export const chatController = async (
                     : 0,
         });
 
-        // 4. Generate response using
-        // conversation history + RAG context
-        const response =
-            await generateRAGResponse(
-                cleanMessage,
-                context,
-                conversationHistory
-            );
+        // 6. Generate response using the original question,
+        // retrieved knowledge, and previous conversation history
+        const response = await generateRAGResponse(
+            cleanMessage,
+            context,
+            conversationHistory
+        );
 
-        // 5. Save user message
+        // 7. Save user message
         addMessage(cleanConversationId, {
             role: "user",
             content: cleanMessage,
         });
 
-        // 6. Save assistant response
+        // 8. Save assistant response
         addMessage(cleanConversationId, {
             role: "assistant",
             content: response,
@@ -124,10 +129,7 @@ export const chatController = async (
             response,
         });
     } catch (error) {
-        console.error(
-            "Chat controller error:",
-            error
-        );
+        console.error("Chat controller error:", error);
 
         return res.status(500).json({
             success: false,

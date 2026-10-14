@@ -192,7 +192,7 @@ const seedProfile = async (): Promise<void> => {
             {
                 title: "Prabhat AI",
                 description:
-                    "A personal AI agent representing Prabhat Jaidiya. Built using TypeScript, Node.js, MongoDB, and the Google Gemini API. Implemented structured knowledge retrieval, system instructions, Gemini embeddings, cosine-similarity vector search, top-K retrieval, relevance filtering, a RAG pipeline, retrieval accuracy improvements, conversation memory, document processing, and GitHub integration with error-handling and regression testing. Day 17 is complete. Next: Day 18, Learning Progress.",
+                    "A personal AI agent representing Prabhat Jaidiya. Built using TypeScript, Node.js, MongoDB, and the Google Gemini API. Implemented structured knowledge retrieval, system instructions, Gemini embeddings, cosine-similarity vector search, top-K retrieval, relevance filtering, a RAG pipeline, retrieval accuracy improvements, conversation memory, document processing, and GitHub integration with error-handling and regression testing. Day 18, Learning Progress, is complete. Next: Day 19, Context-Aware Responses.",
                 technologies: [
                     "TypeScript",
                     "Node.js",
@@ -244,9 +244,10 @@ const seedProfile = async (): Promise<void> => {
             {
                 topic: "Prabhat AI",
                 description:
-                    "A 28-day project-based learning journey to build a personal AI agent with structured knowledge retrieval, Gemini embeddings, vector search, RAG, retrieval accuracy improvements, conversation memory, document processing, and GitHub integration. Day 17, GitHub Integration, is complete. Next: Day 18, Learning Progress.",
+                    "A 28-day project-based learning journey to build a personal AI agent with structured knowledge retrieval, Gemini embeddings, vector search, RAG, retrieval accuracy improvements, conversation memory, document processing, GitHub integration, and learning progress. Day 18, Learning Progress, is complete. Day 19, Context-Aware Responses, is in progress.",
+
                 status: "In Progress",
-                progress: 60.71,
+                progress: 64.29,
             },
         ];
 
