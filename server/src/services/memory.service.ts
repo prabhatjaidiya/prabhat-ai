@@ -29,6 +29,14 @@ export function addMessage(
 
     history.push(message);
 
+    // Keep stored history bounded.
+    if (history.length > MAX_HISTORY_MESSAGES) {
+        history.splice(
+            0,
+            history.length - MAX_HISTORY_MESSAGES
+        );
+    }
+
     conversations.set(conversationId, history);
 }
 

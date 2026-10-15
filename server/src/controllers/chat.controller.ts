@@ -10,6 +10,9 @@ import {
 } from "../services/memory.service.js";
 import { getPublicRepositories } from "../services/github.service.js";
 
+const MAX_MESSAGE_LENGTH = 4000;
+const MAX_CONVERSATION_ID_LENGTH = 128;
+
 export const chatController = async (
     req: Request,
     res: Response
@@ -39,14 +42,28 @@ export const chatController = async (
             });
         }
 
+        if (
+            conversationId.length > MAX_CONVERSATION_ID_LENGTH
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: `Conversation ID must not exceed ${MAX_CONVERSATION_ID_LENGTH} characters`,
+            });
+        }
+
+        if (message.length > MAX_MESSAGE_LENGTH) {
+            return res.status(400).json({
+                success: false,
+                message: `Message must not exceed ${MAX_MESSAGE_LENGTH} characters`,
+            });
+        }
+
         const cleanMessage = message.trim();
         const cleanConversationId = conversationId.trim();
 
         // 1. Get previous conversation history
         const conversationHistory =
             getConversationHistory(cleanConversationId);
-
-        console.log("Conversation history:", conversationHistory);
 
         // 2. Resolve contextual references before retrieval
         const resolvedQuery = await resolveContextualQuery(
@@ -55,8 +72,9 @@ export const chatController = async (
         );
 
         console.log("Query resolution diagnostics:", {
-            originalQuestion: cleanMessage,
-            resolvedQuery,
+            originalMessageLength: cleanMessage.length,
+            resolvedQueryLength: resolvedQuery.length,
+            historyMessages: conversationHistory.length,
         });
 
         // 3. Retrieve knowledge using the resolved query
@@ -73,7 +91,12 @@ export const chatController = async (
                 repositories,
             };
         } catch (error) {
-            console.error("GitHub retrieval error:", error);
+            console.error("GitHub retrieval failed:", {
+                errorType:
+                    error instanceof Error
+                        ? error.name
+                        : "UnknownError",
+            });
 
             githubContext = {
                 status: "unavailable",
@@ -81,8 +104,6 @@ export const chatController = async (
                     "GitHub repository data could not be retrieved.",
             };
         }
-
-        console.log("Retrieved knowledge:", knowledge);
 
         // 5. Assemble RAG context
         const context = JSON.stringify(
@@ -129,7 +150,12 @@ export const chatController = async (
             response,
         });
     } catch (error) {
-        console.error("Chat controller error:", error);
+        console.error("Chat controller failed:", {
+            errorType:
+                error instanceof Error
+                    ? error.name
+                    : "UnknownError",
+        });
 
         return res.status(500).json({
             success: false,

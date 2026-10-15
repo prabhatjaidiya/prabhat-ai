@@ -170,7 +170,7 @@ const seedProfile = async (): Promise<void> => {
             {
                 title: "ShopSphere",
                 description:
-                    "A full-stack e-commerce platform in development. Implemented the React and TypeScript frontend foundation, reusable components, product listing and detail pages, search, filtering, sorting, and cart state management. The Express and TypeScript backend uses MongoDB and Mongoose. Product APIs support listing, details, pagination, search, and filtering. Registration, login, JWT authentication, and role-based protected routes are implemented. Cart and wishlist backend functionality is complete, including CRUD operations, product and quantity validation, stock checks, customer-only access, duplicate prevention, and MongoDB persistence. Next: frontend-backend integration.",
+                    "A full-stack e-commerce platform currently in development as part of a 28-day roadmap. The frontend uses React, TypeScript, Tailwind CSS, React Router, and TanStack Query. Implemented frontend features include reusable components, product listing and detail pages, search, filtering, sorting, and cart state management. The backend uses Node.js, Express, TypeScript, MongoDB, and Mongoose. Product APIs support listing, details, pagination, search, and filtering. Registration, login, JWT authentication, and role-based protected routes are implemented. Cart and wishlist backend functionality is complete, including CRUD operations, product and quantity validation, stock checks, customer-only access, duplicate prevention, and MongoDB persistence. Frontend-backend integration and checkout functionality are complete. The Order Management API is implemented, including order creation and insufficient-stock validation. Latest confirmed progress: Day 16 of 28 (57.14%). Next: Day 17 — Customer Order Pages, including the order confirmation page, My Orders page, order details and status, and loading/error states.",
                 technologies: [
                     "React",
                     "TypeScript",
@@ -237,9 +237,9 @@ const seedProfile = async (): Promise<void> => {
             {
                 topic: "ShopSphere",
                 description:
-                    "A 28-day full-stack e-commerce project covering customer-facing UI, product APIs, MongoDB persistence, authentication, role-based authorization, cart and wishlist functionality, and frontend-backend integration. Day 14, Frontend-Backend Integration, is complete. Next: Day 15, as defined in the confirmed roadmap.",
+                    "A 28-day full-stack e-commerce project covering the customer-facing UI, product APIs, MongoDB persistence, authentication, role-based authorization, cart and wishlist functionality, frontend-backend integration, checkout, and order management. Day 16 — Order Management API — is complete. Order creation validates product stock, and insufficient-stock requests are rejected without creating an order or clearing the cart. Next: Day 17 — Customer Order Pages, including order confirmation, My Orders, order details and status, and loading/error states.",
                 status: "In Progress",
-                progress: 50,
+                progress: 57.14,
             },
             {
                 topic: "Prabhat AI",
