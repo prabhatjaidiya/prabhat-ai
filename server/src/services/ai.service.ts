@@ -6,6 +6,24 @@ const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY,
 });
 
+function getGeminiErrorDetails(error: unknown) {
+    if (!(error instanceof Error)) {
+        return { errorType: "UnknownError" };
+    }
+
+    const apiError = error as Error & {
+        status?: number;
+        code?: string;
+    };
+
+    return {
+        errorType: apiError.name,
+        message: apiError.message,
+        status: apiError.status,
+        code: apiError.code,
+    };
+}
+
 export async function generateAIResponse(
     message: string,
     knowledge: unknown
@@ -37,12 +55,7 @@ ${message}
 
         return response.text;
     } catch (error) {
-        console.error("Gemini API request failed:", {
-            errorType:
-                error instanceof Error
-                    ? error.name
-                    : "UnknownError",
-        });
+        console.error("Gemini API request failed:", getGeminiErrorDetails(error));
         throw error;
     }
 }
@@ -159,12 +172,10 @@ export async function generateRAGResponse(
             "I couldn't generate a response."
         );
     } catch (error) {
-        console.error("Gemini RAG API request failed:", {
-            errorType:
-                error instanceof Error
-                    ? error.name
-                    : "UnknownError",
-        });
+        console.error(
+            "Gemini RAG API request failed:",
+            getGeminiErrorDetails(error)
+        );
         throw error;
     }
 }
