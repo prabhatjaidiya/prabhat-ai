@@ -1,1 +1,93 @@
 @import "tailwindcss";
+
+.markdown-content p {
+  margin: 0 0 1rem;
+}
+
+.markdown-content p:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-content strong {
+  color: #e8dfd0;
+  font-weight: 700;
+}
+
+.markdown-content ul {
+  margin: 0.5rem 0 1rem;
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.markdown-content ol {
+  margin: 0.5rem 0 1rem;
+  padding-left: 1.25rem;
+  list-style: decimal;
+}
+
+.markdown-content li {
+  margin: 0.25rem 0;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3 {
+  margin: 1rem 0 0.5rem;
+  color: #e8dfd0;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.markdown-content code {
+  border-radius: 0.25rem;
+  background: #202523;
+  padding: 0.125rem 0.3rem;
+  font-size: 0.875em;
+  overflow-wrap: anywhere;
+}
+
+.markdown-content pre {
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  background: #0b0d0d;
+  padding: 0.75rem;
+}
+
+.markdown-content pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.markdown-content a {
+  color: #9bbba5;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+
+/* Premium dark scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #343D37 transparent;
+}
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #343D37;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6F967B;
+}

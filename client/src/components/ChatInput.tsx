@@ -1,43 +1,82 @@
+import { useState } from 'react'
+
 type ChatInputProps = {
   onSend: (message: string) => void
 }
 
 function ChatInput({ onSend }: ChatInputProps) {
+  const [message, setMessage] = useState('')
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    const form = event.currentTarget
-    const input = form.elements.namedItem('message') as HTMLInputElement
-    const message = input.value.trim()
+    const trimmedMessage = message.trim()
+    if (!trimmedMessage) return
 
-    if (!message) return
+    onSend(trimmedMessage)
+    setMessage('')
+  }
 
-    onSend(message)
-    form.reset()
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault()
+      event.currentTarget.form?.requestSubmit()
+    }
   }
 
   return (
-    <footer className="border-t border-gray-200 bg-white px-4 py-4">
+    <footer className="sticky bottom-0 border-t border-white/[0.07] bg-[#0B0D0D]/95 px-4 py-4 backdrop-blur-xl sm:px-6">
       <form
         onSubmit={handleSubmit}
-        className="mx-auto flex max-w-3xl gap-3"
+        className="mx-auto w-full max-w-3xl"
       >
-        <div className="flex flex-1 items-center rounded-2xl border border-gray-300 bg-gray-50 px-4 transition focus-within:border-blue-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-100">
-          <input
+        <div className="rounded-2xl border border-white/[0.1] bg-[#141817] transition-colors focus-within:border-[#506B5B]">
+          <textarea
             name="message"
-            type="text"
-            placeholder="Ask Prabhat AI something..."
-            className="min-w-0 flex-1 bg-transparent py-3 text-sm text-gray-900 outline-none placeholder:text-gray-400"
+            value={message}
+            onChange={(event) => setMessage(event.target.value)}
+            onKeyDown={handleKeyDown}
+            rows={2}
+            maxLength={4000}
+            placeholder="Ask about Prabhat's background, projects, or skills..."
+            aria-label="Message Prabhat AI"
+            className="max-h-40 min-h-14 w-full resize-none bg-transparent px-4 pt-4 text-sm leading-6 text-[#E8DFD0] outline-none placeholder:text-[#68746D]"
           />
-        </div>
 
-        <button
-          type="submit"
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-lg text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md"
-          aria-label="Send message"
-        >
-          ➤
-        </button>
+          <div className="flex items-center justify-between gap-3 px-3 pb-3">
+            <p className="hidden text-xs text-[#68746D] sm:block">
+              Enter to send · Shift + Enter for a new line
+            </p>
+
+            <p className="text-xs text-[#68746D] sm:hidden">
+              Shift + Enter for a new line
+            </p>
+
+            <button
+              type="submit"
+              disabled={!message.trim()}
+              aria-label="Send message"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#244538] text-[#E8DFD0] transition-colors hover:bg-[#315744] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#82978A] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                className="h-5 w-5"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 19V5m-7 7 7-7 7 7"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
       </form>
     </footer>
   )
