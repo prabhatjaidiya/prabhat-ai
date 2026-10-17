@@ -66,33 +66,24 @@ function isProjectListQuery(message: string): boolean {
 function isLearningRoadmapListQuery(message: string): boolean {
     const normalizedMessage = message.toLowerCase().trim();
 
-    const asksForAll =
-        /\b(all|every|list|show|which|what)\b/.test(
-            normalizedMessage
-        );
-
     const mentionsLearning =
-        /\b(learning roadmaps?|learning paths?|roadmaps?)\b/.test(
+        /\b(learning|roadmaps?|learning paths?|progress|journey|what have i learned|what has prabhat learned)\b/.test(
             normalizedMessage
         );
 
-    const asksForNextSteps =
-        /\b(what should i complete next|what should i do next|next steps|what comes next)\b/.test(
+    const asksForOverview =
+        /\b(all|every|overall|combined|each|both|current|currently|status|progress|journey|complete|completed|next steps|what comes next)\b/.test(
             normalizedMessage
         );
 
-    const mentionsMultipleProjects =
-        /\b(in each|both|two|projects)\b/.test(normalizedMessage);
-
-    const asksForProgressAndNextTasks =
-        /\b(progress|completion percentage|completion status|next task|next tasks)\b/.test(
+    const mentionsMultipleTracks =
+        /\b(shopsphere|prabhat ai|node\.?js|mern|projects|tracks|roadmaps?)\b/.test(
             normalizedMessage
-        ) && mentionsLearning;
+        );
 
     return (
-        (asksForAll && mentionsLearning) ||
-        (asksForNextSteps && mentionsMultipleProjects) ||
-        asksForProgressAndNextTasks
+        (mentionsLearning && asksForOverview) ||
+        (asksForOverview && mentionsMultipleTracks)
     );
 }
 
@@ -135,14 +126,11 @@ export async function retrieveKnowledge(
                 content:
                     `${project.title}. ` +
                     `${project.description}. ` +
-                    `Technologies: ${Array.isArray(
-                        project.technologies
-                    )
-                        ? project.technologies.join(
-                            ", "
-                        )
-                        : ""
-                    }`,
+                    `Technologies: ${Array.isArray(project.technologies)
+                        ? project.technologies.join(", ")
+                        : ""}. ` +
+                    `GitHub repository: ${project.githubUrl || "Not provided"}. ` +
+                    `Live demo: ${project.liveUrl || "Not provided"}`,
                 similarity: 1,
             })
         );
@@ -239,17 +227,19 @@ export async function retrieveKnowledge(
         const project of
         projects as unknown as SearchableRecord[]
     ) {
+
         const content =
             `${project.title}. ` +
             `${project.description}. ` +
-            `Technologies: ${Array.isArray(
-                project.technologies
-            )
-                ? project.technologies.join(
-                    ", "
-                )
-                : ""
-            }`;
+            `Technologies: ${Array.isArray(project.technologies)
+                ? project.technologies.join(", ")
+                : ""}. ` +
+            `GitHub repository: ${typeof project.githubUrl === "string"
+                ? project.githubUrl
+                : "Not provided"}. ` +
+            `Live demo: ${typeof project.liveUrl === "string"
+                ? project.liveUrl
+                : "Not provided"}`;
 
         documents.push({
             id: String(project._id),

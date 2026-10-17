@@ -169,8 +169,9 @@ const seedProfile = async (): Promise<void> => {
             },
             {
                 title: "ShopSphere",
+
                 description:
-                    "A full-stack e-commerce platform currently in development as part of a 28-day roadmap. The frontend uses React, TypeScript, Tailwind CSS, React Router, and TanStack Query. Implemented frontend features include reusable components, product listing and detail pages, search, filtering, sorting, and cart state management. The backend uses Node.js, Express, TypeScript, MongoDB, and Mongoose. Product APIs support listing, details, pagination, search, and filtering. Registration, login, JWT authentication, and role-based protected routes are implemented. Cart and wishlist backend functionality is complete, including CRUD operations, product and quantity validation, stock checks, customer-only access, duplicate prevention, and MongoDB persistence. Frontend-backend integration and checkout functionality are complete. The Order Management API is implemented, including order creation and insufficient-stock validation. Latest confirmed progress: Day 16 of 28 (57.14%). Next: Day 17 — Customer Order Pages, including the order confirmation page, My Orders page, order details and status, and loading/error states.",
+                    "A full-stack e-commerce platform in development. Uses React, TypeScript, Tailwind CSS, Node.js, Express, MongoDB, and Mongoose. Implemented product browsing, authentication, role-based access, cart and wishlist, checkout, order management, customer order pages, and Razorpay payment gateway integration. Day 18 of the 28-day roadmap is complete. Next: Day 19.",
                 technologies: [
                     "React",
                     "TypeScript",
@@ -192,7 +193,7 @@ const seedProfile = async (): Promise<void> => {
             {
                 title: "Prabhat AI",
                 description:
-                    "A personal AI agent representing Prabhat Jaidiya. Built using TypeScript, Node.js, MongoDB, and the Google Gemini API. Implemented structured knowledge retrieval, system instructions, Gemini embeddings, cosine-similarity vector search, top-K retrieval, relevance filtering, a RAG pipeline, retrieval accuracy improvements, conversation memory, document processing, and GitHub integration with error-handling and regression testing. Day 18, Learning Progress, is complete. Next: Day 19, Context-Aware Responses.",
+                    "A personal AI agent representing Prabhat Jaidiya, built with TypeScript, Node.js, MongoDB, and the Google Gemini API. Implemented structured knowledge retrieval, embeddings, vector search, RAG, conversation memory, document processing, GitHub integration, context-aware responses, guardrails, and agent testing. Day 21 of the 28-day roadmap is complete. Next: Day 22 — Professional Chat UI.",
                 technologies: [
                     "TypeScript",
                     "Node.js",
@@ -230,24 +231,23 @@ const seedProfile = async (): Promise<void> => {
             {
                 topic: "Node.js → MERN Roadmap",
                 description:
-                    "Completed the full 42-day Node.js → MERN learning roadmap. Covered Node.js fundamentals, Express.js, REST APIs, MongoDB, Mongoose, authentication, authorization, backend security, production architecture, and React-to-Node.js integration. Day 42, Final MERN Roadmap Review, is complete.",
+                    "Completed the full 42-day Node.js → MERN roadmap. Covered Node.js fundamentals, Express.js, REST APIs, MongoDB, Mongoose, authentication, authorization, backend security, production architecture, and React-to-Node.js integration. All 42 days are complete.",
                 status: "Completed",
                 progress: 100,
             },
             {
                 topic: "ShopSphere",
                 description:
-                    "A 28-day full-stack e-commerce project covering the customer-facing UI, product APIs, MongoDB persistence, authentication, role-based authorization, cart and wishlist functionality, frontend-backend integration, checkout, and order management. Day 16 — Order Management API — is complete. Order creation validates product stock, and insufficient-stock requests are rejected without creating an order or clearing the cart. Next: Day 17 — Customer Order Pages, including order confirmation, My Orders, order details and status, and loading/error states.",
+                    "A 28-day full-stack e-commerce project using React, TypeScript, Tailwind CSS, Node.js, Express, MongoDB, and Mongoose. Completed product listing and details, product APIs, authentication, role-based authorization, cart and wishlist functionality, frontend-backend integration, checkout, order management, customer order pages, and Razorpay payment gateway integration. Day 18 — Payment Gateway Integration — is complete. Next: Day 19 of 28.",
                 status: "In Progress",
-                progress: 57.14,
+                progress: 64.29,
             },
             {
                 topic: "Prabhat AI",
                 description:
-                    "A 28-day project-based learning journey to build a personal AI agent with structured knowledge retrieval, Gemini embeddings, vector search, RAG, retrieval accuracy improvements, conversation memory, document processing, GitHub integration, and learning progress. Day 18, Learning Progress, is complete. Day 19, Context-Aware Responses, is in progress.",
-
+                    "A 28-day project-based learning journey to build a personal AI agent using TypeScript, Node.js, MongoDB, and the Google Gemini API. Completed structured knowledge retrieval, system instructions, embeddings, vector search, RAG, retrieval accuracy improvements, conversation memory, document processing, GitHub integration, learning progress, context-aware responses, guardrails, and agent testing. Day 21 — Agent Testing — is complete. Next: Day 22 — Professional Chat UI.",
                 status: "In Progress",
-                progress: 64.29,
+                progress: 75,
             },
         ];
 
