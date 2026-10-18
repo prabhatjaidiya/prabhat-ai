@@ -9,6 +9,7 @@ import {
     getConversationHistory,
 } from "../services/memory.service.js";
 import { getPublicRepositories } from "../services/github.service.js";
+import { requiresGitHubData } from "../services/github-query.service.js";
 
 const MAX_MESSAGE_LENGTH = 4000;
 const MAX_CONVERSATION_ID_LENGTH = 128;
@@ -80,28 +81,36 @@ export const chatController = async (
         // 3. Retrieve knowledge using the resolved query
         const knowledge = await retrieveKnowledge(resolvedQuery);
 
-        // 4. Retrieve GitHub repository context
+        // 4. Retrieve GitHub context only when the query needs it
         let githubContext;
 
-        try {
-            const repositories = await getPublicRepositories();
+        if (requiresGitHubData(resolvedQuery)) {
+            try {
+                const repositories = await getPublicRepositories();
 
-            githubContext = {
-                status: "available",
-                repositories,
-            };
-        } catch (error) {
-            console.error("GitHub retrieval failed:", {
-                errorType:
-                    error instanceof Error
-                        ? error.name
-                        : "UnknownError",
-            });
+                githubContext = {
+                    status: "available",
+                    repositories,
+                };
+            } catch (error) {
+                console.error("GitHub retrieval failed:", {
+                    errorType:
+                        error instanceof Error
+                            ? error.name
+                            : "UnknownError",
+                });
 
+                githubContext = {
+                    status: "unavailable",
+                    message:
+                        "GitHub repository data could not be retrieved.",
+                };
+            }
+        } else {
             githubContext = {
-                status: "unavailable",
+                status: "skipped",
                 message:
-                    "GitHub repository data could not be retrieved.",
+                    "GitHub data was not retrieved because this query does not require it.",
             };
         }
 
