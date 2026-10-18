@@ -57,9 +57,26 @@ function isProjectListQuery(message: string): boolean {
             normalizedMessage
         );
 
+    const asksForProjectOverview =
+        /\b(tell me about|describe|overview of|summary of|summari[sz]e|give me an overview of)\b/.test(
+            normalizedMessage
+        ) &&
+        /\bprojects\b/.test(normalizedMessage);
+
+    const asksForProjectTechnologies =
+        /\bprojects\b/.test(normalizedMessage) &&
+        /\b(technologies|tech stacks?|technology stack|tools used)\b/.test(
+            normalizedMessage
+        );
+
     return (
         /\bprojects?\b/.test(normalizedMessage) &&
-        (explicitListRequest || broadProjectRequest)
+        (
+            explicitListRequest ||
+            broadProjectRequest ||
+            asksForProjectOverview ||
+            asksForProjectTechnologies
+        )
     );
 }
 
