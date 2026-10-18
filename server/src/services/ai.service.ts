@@ -18,7 +18,6 @@ function getGeminiErrorDetails(error: unknown) {
 
     return {
         errorType: apiError.name,
-        message: apiError.message,
         status: apiError.status,
         code: apiError.code,
     };

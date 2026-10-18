@@ -12,7 +12,11 @@ const connectDB = async (): Promise<void> => {
 
     console.log("MongoDB connected successfully");
   } catch (error) {
-    console.error("MongoDB connection failed:", error);
+    console.error("MongoDB connection failed:", {
+      errorType:
+        error instanceof Error ? error.name : "UnknownError",
+    });
+
     process.exit(1);
   }
 };
