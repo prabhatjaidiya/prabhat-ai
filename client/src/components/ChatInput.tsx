@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ArrowUp } from 'lucide-react'
 
 type ChatInputProps = {
   onSend: (message: string) => void
@@ -27,55 +28,32 @@ function ChatInput({ onSend }: ChatInputProps) {
   }
 
   return (
-    <footer className="sticky bottom-0 border-t border-white/[0.07] bg-[#0B0D0D]/95 px-4 py-4 backdrop-blur-xl sm:px-6">
+    <footer className="sticky bottom-0 border-t border-white/[0.07] bg-[#0B0D0D]/95 px-4 py-3 backdrop-blur-xl sm:px-6">
       <form
         onSubmit={handleSubmit}
         className="mx-auto w-full max-w-3xl"
       >
-        <div className="rounded-2xl border border-white/[0.1] bg-[#141817] transition-colors focus-within:border-[#506B5B]">
+        <div className="flex items-end gap-3 rounded-full border border-white/[0.1] bg-[#141817] px-3 py-2 transition-colors focus-within:border-[#506B5B]">
           <textarea
             name="message"
             value={message}
             onChange={(event) => setMessage(event.target.value)}
             onKeyDown={handleKeyDown}
-            rows={2}
+            rows={1}
             maxLength={4000}
-            placeholder="Ask about Prabhat's background, projects, or skills..."
+            placeholder="Ask Prabhat AI anything..."
             aria-label="Message Prabhat AI"
-            className="max-h-40 min-h-14 w-full resize-none bg-transparent px-4 pt-4 text-sm leading-6 text-[#E8DFD0] outline-none placeholder:text-[#68746D]"
+            className="max-h-40 min-h-10 min-w-0 flex-1 resize-none bg-transparent px-1 py-2 text-sm leading-6 text-[#E8DFD0] outline-none placeholder:text-[#68746D]"
           />
 
-          <div className="flex items-center justify-between gap-3 px-3 pb-3">
-            <p className="hidden text-xs text-[#68746D] sm:block">
-              Enter to send · Shift + Enter for a new line
-            </p>
-
-            <p className="text-xs text-[#68746D] sm:hidden">
-              Shift + Enter for a new line
-            </p>
-
-            <button
-              type="submit"
-              disabled={!message.trim()}
-              aria-label="Send message"
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#244538] text-[#E8DFD0] transition-colors hover:bg-[#315744] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#82978A] disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                className="h-5 w-5"
-                aria-hidden="true"
-              >
-                <path
-                  d="M12 19V5m-7 7 7-7 7 7"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={!message.trim()}
+            aria-label="Send message"
+            className="mb-0.5 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#244538] text-[#E8DFD0] transition-colors hover:bg-[#315744] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#82978A] disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <ArrowUp size={20} />
+          </button>
         </div>
       </form>
     </footer>

@@ -88,9 +88,9 @@ export async function getPublicRepositories(): Promise<GitHubRepository[]> {
                 updated_at: repo.updated_at,
                 topics: Array.isArray(repo.topics)
                     ? repo.topics.filter(
-                          (topic): topic is string =>
-                              typeof topic === "string"
-                      )
+                        (topic): topic is string =>
+                            typeof topic === "string"
+                    )
                     : [],
             });
         }
@@ -99,4 +99,90 @@ export async function getPublicRepositories(): Promise<GitHubRepository[]> {
     }
 
     return repositories;
+}
+
+export interface GitHubCommit {
+    sha: string;
+    message: string;
+    author: string;
+    date: string | null;
+    html_url: string;
+}
+
+interface GitHubApiCommit {
+    sha: string;
+    commit: {
+        message: string;
+        author: {
+            name: string;
+            date: string | null;
+        } | null;
+    };
+    author: {
+        login: string;
+    } | null;
+    html_url: string;
+}
+
+export async function getLatestRepositoryCommits(
+    owner: string,
+    repo: string,
+    limit = 3
+): Promise<GitHubCommit[]> {
+    if (!owner.trim() || !repo.trim()) {
+        throw new Error("GitHub owner and repository are required.");
+    }
+
+    if (!Number.isInteger(limit) || limit < 1 || limit > 10) {
+        throw new Error("Commit limit must be between 1 and 10.");
+    }
+
+    const url = new URL(
+        `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/commits`
+    );
+
+    url.searchParams.set("per_page", String(limit));
+
+    const response = await fetch(url, {
+        headers: {
+            Accept: "application/vnd.github+json",
+            "User-Agent": "Prabhat-AI",
+            "X-GitHub-Api-Version": "2022-11-28",
+        },
+        signal: AbortSignal.timeout(10_000),
+    });
+
+    if (!response.ok) {
+        throw new Error(
+            `GitHub commits API request failed with status ${response.status}.`
+        );
+    }
+
+    const data: unknown = await response.json();
+
+    if (!Array.isArray(data)) {
+        throw new Error("Unexpected response from GitHub commits API.");
+    }
+
+    return (data as GitHubApiCommit[]).map((item) => {
+        if (
+            !item ||
+            typeof item.sha !== "string" ||
+            typeof item.commit?.message !== "string" ||
+            typeof item.html_url !== "string"
+        ) {
+            throw new Error("Invalid commit data from GitHub API.");
+        }
+
+        return {
+            sha: item.sha,
+            message: item.commit.message,
+            author:
+                item.author?.login ??
+                item.commit.author?.name ??
+                "Unknown",
+            date: item.commit.author?.date ?? null,
+            html_url: item.html_url,
+        };
+    });
 }

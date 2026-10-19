@@ -4,3 +4,10 @@ const GITHUB_QUERY_PATTERN =
 export function requiresGitHubData(query: string): boolean {
     return GITHUB_QUERY_PATTERN.test(query);
 }
+
+const COMMIT_HISTORY_PATTERN =
+    /\b(commits?|commit history|recent changes|latest changes|recent commits|latest commits|last commits|who committed|commit messages)\b/i;
+
+export function requiresCommitHistory(query: string): boolean {
+    return COMMIT_HISTORY_PATTERN.test(query);
+}

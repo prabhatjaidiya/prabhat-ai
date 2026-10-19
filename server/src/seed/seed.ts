@@ -193,7 +193,7 @@ const seedProfile = async (): Promise<void> => {
             {
                 title: "Prabhat AI",
                 description:
-                    "A personal AI agent representing Prabhat Jaidiya, built with TypeScript, Node.js, MongoDB, and the Google Gemini API. Implemented structured knowledge retrieval, embeddings, vector search, RAG, conversation memory, document processing, GitHub integration, context-aware responses, guardrails, and agent testing. Day 21 of the 28-day roadmap is complete. Next: Day 22 — Professional Chat UI.",
+                    "A deployed personal AI agent representing Prabhat Jaidiya, built with TypeScript, Node.js, MongoDB, and the Google Gemini API. Features include structured knowledge retrieval, embeddings, vector search, RAG, conversation memory, document processing, GitHub integration, learning progress retrieval, context-aware responses, security guardrails, agent testing, and a professional chat interface. The frontend is deployed on Vercel and the backend on Render. Day 26 — Deployment — is complete. Currently working on Day 27 — Portfolio Polish. Day 28 — Final QA + README — remains.",
                 technologies: [
                     "TypeScript",
                     "Node.js",
@@ -208,6 +208,11 @@ const seedProfile = async (): Promise<void> => {
                     "RAG",
                     "Conversation Memory",
                     "REST API",
+                    "React",
+                    "Vite",
+                    "Tailwind CSS",
+                    "Vercel",
+                    "Render",
                 ],
                 githubUrl: "https://github.com/prabhatjaidiya/prabhat-ai",
                 featured: true,
@@ -245,9 +250,9 @@ const seedProfile = async (): Promise<void> => {
             {
                 topic: "Prabhat AI",
                 description:
-                    "A 28-day project-based learning journey to build a personal AI agent using TypeScript, Node.js, MongoDB, and the Google Gemini API. Completed structured knowledge retrieval, system instructions, embeddings, vector search, RAG, retrieval accuracy improvements, conversation memory, document processing, GitHub integration, learning progress, context-aware responses, guardrails, and agent testing. Day 21 — Agent Testing — is complete. Next: Day 22 — Professional Chat UI.",
+                    "A 28-day project-based learning journey to build and deploy a personal AI agent using TypeScript, Node.js, MongoDB, and the Google Gemini API. Completed structured knowledge retrieval, system instructions, embeddings, vector search, RAG, retrieval accuracy improvements, conversation memory, document processing, GitHub integration, learning progress, context-aware responses, security guardrails, agent testing, professional chat UI, portfolio integration, GitHub live data, security audit, and deployment. The frontend is deployed on Vercel and the backend on Render. Days 1–26 are complete. Day 27 — Portfolio Polish — is currently in progress. Next: Day 28 — Final QA + README.",
                 status: "In Progress",
-                progress: 75,
+                progress: 92.86,
             },
         ];
 

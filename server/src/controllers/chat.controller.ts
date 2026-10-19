@@ -8,8 +8,16 @@ import {
     addMessage,
     getConversationHistory,
 } from "../services/memory.service.js";
-import { getPublicRepositories } from "../services/github.service.js";
-import { requiresGitHubData } from "../services/github-query.service.js";
+import {
+    getPublicRepositories,
+    getLatestRepositoryCommits,
+} from "../services/github.service.js";
+
+import {
+    requiresGitHubData,
+    requiresCommitHistory,
+} from "../services/github-query.service.js";
+
 
 const MAX_MESSAGE_LENGTH = 4000;
 const MAX_CONVERSATION_ID_LENGTH = 128;
@@ -81,16 +89,57 @@ export const chatController = async (
         // 3. Retrieve knowledge using the resolved query
         const knowledge = await retrieveKnowledge(resolvedQuery);
 
-        // 4. Retrieve GitHub context only when the query needs it
-        let githubContext;
+        // 4. Retrieve GitHub context only when required
+        let githubContext:
+            | {
+                status: "available";
+                repositories: Awaited<
+                    ReturnType<typeof getPublicRepositories>
+                >;
+                commits?: Awaited<
+                    ReturnType<typeof getLatestRepositoryCommits>
+                >;
+            }
+            | {
+                status: "unavailable";
+                message: string;
+            }
+            | {
+                status: "skipped";
+                message: string;
+            };
 
         if (requiresGitHubData(resolvedQuery)) {
             try {
                 const repositories = await getPublicRepositories();
 
+                const needsCommits =
+                    requiresCommitHistory(resolvedQuery);
+
+                let commits: Awaited<
+                    ReturnType<typeof getLatestRepositoryCommits>
+                > = [];
+
+                if (needsCommits) {
+                    const username = process.env.GITHUB_USERNAME;
+
+                    if (!username) {
+                        throw new Error(
+                            "GITHUB_USERNAME is not configured."
+                        );
+                    }
+
+                    commits = await getLatestRepositoryCommits(
+                        username,
+                        "prabhat-ai",
+                        3
+                    );
+                }
+
                 githubContext = {
                     status: "available",
                     repositories,
+                    ...(needsCommits ? { commits } : {}),
                 };
             } catch (error) {
                 console.error("GitHub retrieval failed:", {
@@ -103,7 +152,7 @@ export const chatController = async (
                 githubContext = {
                     status: "unavailable",
                     message:
-                        "GitHub repository data could not be retrieved.",
+                        "GitHub repository or commit data could not be retrieved.",
                 };
             }
         } else {

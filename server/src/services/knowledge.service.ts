@@ -8,6 +8,7 @@ import {
     searchVectors,
     type VectorDocument,
 } from "./vector-search.service.js";
+import { getLatestRepositoryCommits } from "./github.service.js";
 
 const MIN_RELEVANCE_SCORE = Number(
     process.env.RAG_MIN_RELEVANCE_SCORE || "0.68"
@@ -115,9 +116,61 @@ function getProjectNameFromQuery(
     );
 }
 
+function isGitHubCommitQuery(message: string): boolean {
+    return (
+        /\b(commit|commits|commit history|recent changes|latest changes)\b/i.test(
+            message
+        ) &&
+        /\b(github|git hub|repository|repo|prabhat ai)\b/i.test(
+            message
+        )
+    );
+}
+
+async function retrieveGitHubCommitKnowledge(
+    message: string
+): Promise<KnowledgeResult | null> {
+    if (!isGitHubCommitQuery(message)) {
+        return null;
+    }
+
+    const profile = await Profile.findOne().lean();
+
+    const commits = await getLatestRepositoryCommits(
+        "prabhatjaidiya",
+        "prabhat-ai",
+        3
+    );
+
+    const results = commits.map((commit) => ({
+        id: commit.sha,
+        type: "project" as const,
+        content: [
+            `GitHub commit: ${commit.message}`,
+            `Author: ${commit.author}`,
+            `Date: ${commit.date || "Not provided"}`,
+            `Commit URL: ${commit.html_url}`,
+        ].join("\n"),
+        similarity: 1,
+    }));
+
+    return {
+        profile,
+        results,
+        hasRelevantKnowledge: results.length > 0,
+    };
+}
+
 export async function retrieveKnowledge(
     message: string
 ): Promise<KnowledgeResult> {
+
+    const githubCommitKnowledge =
+        await retrieveGitHubCommitKnowledge(message);
+
+    if (githubCommitKnowledge) {
+        return githubCommitKnowledge;
+    }
 
     /*
      * ------------------------------------------------
