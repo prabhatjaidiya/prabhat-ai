@@ -1,171 +1,48 @@
-﻿# ðŸ¤– Prabhat AI
+﻿# 🤖 Prabhat AI
 
-A personal AI assistant that answers questions about Prabhat's professional background, technical skills, projects, and learning journey using a structured knowledge base, retrieval-augmented generation (RAG), conversation context, and GitHub data.
+**A personal AI assistant powered by retrieval-augmented generation (RAG), conversational context, and GitHub integration.**
 
-**Live Demo:** https://prabhat-ai.vercel.app
-**Backend API:** https://prabhat-ai-api.onrender.com
-**GitHub Repository:** https://github.com/prabhatjaidiya/prabhat-ai
+Prabhat AI answers questions about Prabhat Jaidiya's professional background, technical skills, projects, and learning journey. It combines a structured knowledge base with relevant retrieval and live GitHub data to provide contextual, grounded responses.
 
----
+- **Live Demo:** https://prabhat-ai.vercel.app
+- **Backend API:** https://prabhat-ai-api.onrender.com
+- **GitHub Repository:** https://github.com/prabhatjaidiya/prabhat-ai
 
-## âœ¨ Features
+## ✨ Features
 
-- **Personal knowledge assistant** â€” answers questions about profile, skills, projects, and learning progress.
-- **Retrieval-augmented generation (RAG)** â€” retrieves relevant knowledge to ground AI responses.
-- **Context-aware conversations** â€” uses recent conversation history to resolve follow-up questions.
-- **Conversation memory** â€” keeps a bounded recent message history for each conversation.
-- **GitHub integration** â€” retrieves public repository metadata and, for relevant questions, recent commits from the `prabhat-ai` repository.
-- **Learning progress awareness** â€” answers questions about completed, in-progress, and planned roadmap work based on stored knowledge.
-- **Guardrails and validation** â€” validates chat inputs, bounds conversation history, and treats user and retrieved content as untrusted data.
-- **Responsive chat interface** â€” desktop and mobile layouts, suggested prompts, loading/error states, and chat navigation.
-- **Deployed frontend and backend** â€” frontend hosted on Vercel and backend hosted on Render.
+- **Personal knowledge assistant:** Answers questions about professional background, skills, projects, and learning progress.
+- **Retrieval-Augmented Generation (RAG):** Retrieves relevant knowledge to ground responses.
+- **Context-aware conversations:** Uses recent conversation history to interpret follow-up questions.
+- **Conversation memory:** Maintains a bounded recent message history.
+- **GitHub integration:** Retrieves public repository information and relevant recent commit data.
+- **Learning progress awareness:** Answers questions about completed, ongoing, and planned learning milestones.
+- **Guardrails and validation:** Validates chat input and limits retained conversation history.
+- **Responsive chat UI:** Includes suggested prompts, message loading and error states, and chat navigation.
+- **Production deployment:** Frontend hosted on Vercel and backend hosted on Render.
 
-## ðŸ§° Tech Stack
+## 🧰 Tech Stack
 
-### Frontend
-- React
-- TypeScript
-- Vite
-- Tailwind CSS
-- Lucide React icons
+| Area | Technologies |
+|---|---|
+| Frontend | React, TypeScript, Vite, Tailwind CSS |
+| UI | Lucide React, React Markdown, Remark GFM |
+| Backend | Node.js, Express, TypeScript |
+| Database | MongoDB, Mongoose |
+| AI | Google Gemini API, `@google/genai` |
+| Knowledge retrieval | Embeddings, vector search, RAG |
+| Developer tools | Git, GitHub, npm |
 
-### Backend
-- Node.js
-- Express
-- TypeScript
-- REST API
+## 🏗️ How It Works
 
-### Database and Retrieval
-- MongoDB
-- Mongoose
-- Embeddings and vector search for knowledge retrieval
+1. A user sends a message through the React chat interface.
+2. The frontend sends a `POST /api/chat` request to the backend.
+3. The backend validates the message and conversation ID.
+4. Context resolution and retrieval services find relevant conversation history and personal knowledge.
+5. GitHub data is retrieved when relevant to the question.
+6. The AI service generates a response using the available context and system instructions.
+7. The response is returned to the frontend and displayed in the chat.
 
-### AI
-- Google Gemini API
-- `@google/genai`
-- Gemini model configured by the backend
-
-### Developer Tools
-- Git and GitHub
-- npm
-- VS Code
-- Postman or another API client for endpoint testing
-
----
-
-## ðŸ—ï¸ Architecture
-
-### Chat request flow
-
-```text
-User
- â”‚
- â–¼
-React + TypeScript frontend
- â”‚
- â–¼
-POST /api/chat
- â”‚
- â–¼
-Express chat controller
- â”œâ”€â”€ Validate message and conversation ID
- â”œâ”€â”€ Load recent conversation history
- â”œâ”€â”€ Resolve contextual follow-up questions
- â”œâ”€â”€ Retrieve relevant personal knowledge
- â””â”€â”€ Retrieve GitHub data when the query requires it
-      â”œâ”€â”€ Public repository metadata
-      â””â”€â”€ Recent commits for the Prabhat AI repository
- â”‚
- â–¼
-Build grounded context
- â”‚
- â–¼
-Gemini AI service
- â”œâ”€â”€ Trusted system instructions and guardrails
- â”œâ”€â”€ Retrieved knowledge and GitHub context
- â””â”€â”€ Recent conversation history
- â”‚
- â–¼
-AI response
- â”‚
- â”œâ”€â”€ Save user message
- â””â”€â”€ Save assistant response
- â”‚
- â–¼
-React chat interface
-```
-
-### Main backend responsibilities
-
-- **Controller:** request validation, orchestration, and HTTP responses.
-- **Knowledge service:** retrieves relevant profile, skill, project, and learning information.
-- **AI service:** generates grounded responses and resolves contextual queries.
-- **Memory service:** stores bounded conversation history.
-- **GitHub services:** retrieve repository metadata and recent commit history when needed.
-- **Database models:** store structured personal knowledge in MongoDB.
-
----
-
-## ðŸ“ Project Structure
-
-```text
-prabhat-ai/
-â”œâ”€â”€ client/
-â”‚   â”œâ”€â”€ src/
-â”‚   â”‚   â”œâ”€â”€ components/
-â”‚   â”‚   â”‚   â”œâ”€â”€ ChatHeader.tsx
-â”‚   â”‚   â”‚   â”œâ”€â”€ ChatInput.tsx
-â”‚   â”‚   â”‚   â”œâ”€â”€ MessageBubble.tsx
-â”‚   â”‚   â”‚   â”œâ”€â”€ MessageList.tsx
-â”‚   â”‚   â”‚   â””â”€â”€ Sidebar.tsx
-â”‚   â”‚   â”œâ”€â”€ App.tsx
-â”‚   â”‚   â”œâ”€â”€ index.css
-â”‚   â”‚   â””â”€â”€ main.tsx
-â”‚   â”œâ”€â”€ package.json
-â”‚   â””â”€â”€ vite.config.ts
-â”œâ”€â”€ server/
-â”‚   â”œâ”€â”€ src/
-â”‚   â”‚   â”œâ”€â”€ config/
-â”‚   â”‚   â”‚   â”œâ”€â”€ db.ts
-â”‚   â”‚   â”‚   â””â”€â”€ systemPrompt.ts
-â”‚   â”‚   â”œâ”€â”€ controllers/
-â”‚   â”‚   â”‚   â””â”€â”€ chat.controller.ts
-â”‚   â”‚   â”œâ”€â”€ models/
-â”‚   â”‚   â”‚   â”œâ”€â”€ Experience.ts
-â”‚   â”‚   â”‚   â”œâ”€â”€ Learning.ts
-â”‚   â”‚   â”‚   â”œâ”€â”€ Profile.ts
-â”‚   â”‚   â”‚   â”œâ”€â”€ Project.ts
-â”‚   â”‚   â”‚   â””â”€â”€ Skill.ts
-â”‚   â”‚   â”œâ”€â”€ routes/
-â”‚   â”‚   â”‚   â””â”€â”€ chat.routes.ts
-â”‚   â”‚   â”œâ”€â”€ scripts/
-â”‚   â”‚   â”‚   â””â”€â”€ testKnowledge.ts
-â”‚   â”‚   â”œâ”€â”€ seed/
-â”‚   â”‚   â”‚   â”œâ”€â”€ seed.ts
-â”‚   â”‚   â”‚   â””â”€â”€ verify.ts
-â”‚   â”‚   â”œâ”€â”€ services/
-â”‚   â”‚   â”‚   â”œâ”€â”€ ai.service.ts
-â”‚   â”‚   â”‚   â”œâ”€â”€ context.service.ts
-â”‚   â”‚   â”‚   â”œâ”€â”€ embedding.service.ts
-â”‚   â”‚   â”‚   â”œâ”€â”€ github-query.service.ts
-â”‚   â”‚   â”‚   â”œâ”€â”€ github.service.ts
-â”‚   â”‚   â”‚   â”œâ”€â”€ knowledge.service.ts
-â”‚   â”‚   â”‚   â”œâ”€â”€ memory.service.ts
-â”‚   â”‚   â”‚   â”œâ”€â”€ rag.service.ts
-â”‚   â”‚   â”‚   â”œâ”€â”€ retrieval.service.ts
-â”‚   â”‚   â”‚   â””â”€â”€ vector-search.service.ts
-â”‚   â”‚   â”œâ”€â”€ app.ts
-â”‚   â”‚   â””â”€â”€ server.ts
-â”‚   â””â”€â”€ tests/
-â”‚       â”œâ”€â”€ github-query.test.ts
-â”‚       â””â”€â”€ memory.test.ts
-â”œâ”€â”€ README.md
-â””â”€â”€ .gitignore
-```
-
----
-
-## ðŸš€ Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -183,19 +60,23 @@ cd prabhat-ai
 
 ### 2. Install dependencies
 
+Install the backend dependencies:
+
 ```bash
 cd server
 npm install
+```
 
-cd ../client
+In a separate terminal, install the frontend dependencies:
+
+```bash
+cd client
 npm install
 ```
 
-### 3. Configure environment variables
+### 3. Configure backend environment variables
 
-Create a `.env` file in the `server/` directory. Use the variable names expected by the backend code and never commit real credentials.
-
-Example configuration (replace the placeholders with your own values):
+Create `server/.env`:
 
 ```dotenv
 PORT=5000
@@ -204,11 +85,19 @@ GEMINI_API_KEY=your_gemini_api_key
 GITHUB_USERNAME=prabhatjaidiya
 ```
 
-**Important:** Environment variable names can differ depending on the implementation. Check the backend's configuration and service files before using this example. Do not add secret values to this README or commit `.env` files.
+Replace placeholder values with your own configuration. Never commit real credentials.
 
-If the frontend uses a Vite API-base variable, configure it in `client/.env` using the exact variable name read by the frontend code. For local development, point it to the local backend URL.
+### 4. Configure the frontend
 
-### 4. Run the backend
+Create `client/.env`:
+
+```dotenv
+VITE_API_URL=http://localhost:5000
+```
+
+The frontend uses this variable as the API base URL. For production, configure `VITE_API_URL` in the frontend hosting settings to point to the deployed backend.
+
+### 5. Start the backend
 
 From the `server/` directory:
 
@@ -216,83 +105,69 @@ From the `server/` directory:
 npm run dev
 ```
 
-Use the development script defined in `server/package.json`. If the script has a different name, run the script listed by `npm run`.
+### 6. Start the frontend
 
-### 5. Run the frontend
-
-In a separate terminal, from the `client/` directory:
+From the `client/` directory, in another terminal:
 
 ```bash
 npm run dev
 ```
 
-Open the local URL printed by Vite in your terminal.
+Open the local URL printed by Vite.
 
----
+## 🧪 Build and Verification
 
-## ðŸ§ª Build and Verification
-
-Run the backend production build:
+Build the backend:
 
 ```bash
 cd server
 npm run build
 ```
 
-Run the frontend production build:
+Build the frontend:
 
 ```bash
 cd client
 npm run build
 ```
 
-The Day 27 local verification reported that both builds passed:
-- Backend TypeScript compilation passed.
-- Frontend TypeScript compilation and Vite production build passed.
+The production build scripts compile the backend TypeScript and compile the frontend TypeScript before generating Vite production assets.
 
----
+For final verification, test the chat endpoint, follow-up context, knowledge retrieval, GitHub integration, error handling, and deployed application.
 
-## ðŸŒ Deployment
+## 🌐 Deployment
 
-- **Frontend:** https://prabhat-ai.vercel.app
-- **Backend:** https://prabhat-ai-api.onrender.com
+- **Frontend:** [Vercel deployment](https://prabhat-ai.vercel.app)
+- **Backend:** [Render deployment](https://prabhat-ai-api.onrender.com)
 
-The frontend and backend are deployed separately. Configure production environment variables in the hosting providers' settings rather than committing credentials to the repository.
+The frontend and backend are deployed independently. Configure production environment variables in the relevant hosting dashboards. Do not expose server-side API keys or database credentials in frontend code or `VITE_` variables.
 
----
+## 🔐 Security Considerations
 
-## ðŸ” Security and Reliability
+- Keep Gemini API keys and database connection strings on the server.
+- Never commit `.env` files containing real credentials.
+- Validate incoming messages and conversation IDs.
+- Limit message size and retained conversation history.
+- Treat user messages and retrieved content as untrusted input.
+- Handle external API failures without exposing sensitive server details.
 
-- Validate incoming chat messages and conversation IDs.
-- Limit message length and retained conversation history.
-- Keep API keys and database credentials in environment variables.
-- Do not trust instructions embedded in user input, conversation history, or retrieved documents.
-- Distinguish missing or unavailable GitHub data from an empty repository list.
-- Avoid claiming exact code changes based only on a commit message.
+## 🗺️ Project Roadmap
 
----
+Prabhat AI was developed through a structured 28-day learning and implementation roadmap.
 
-## ðŸ—ºï¸ Roadmap
+- **Days 1–27:** Completed.
+- **Day 28 — Final QA and README:** In progress.
 
-Prabhat AI was developed as a 28-day project.
+The final milestone includes end-to-end verification, production checks, build review, documentation, and the final GitHub review.
 
-- **Days 1â€“26:** Completed.
-- **Day 27 â€” Portfolio Polish:** In progress until the final changes are committed and pushed.
-- **Day 28 â€” Final QA and README:** Planned next.
-
-Update this section when the project roadmap status changes.
-
----
-
-## ðŸ‘¨â€ðŸ’» Author
+## 👨‍💻 Author
 
 **Prabhat Jaidiya**
 
-- GitHub: https://github.com/prabhatjaidiya
-- Prabhat AI repository: https://github.com/prabhatjaidiya/prabhat-ai
+- [GitHub Profile](https://github.com/prabhatjaidiya)
+- [Prabhat AI Repository](https://github.com/prabhatjaidiya/prabhat-ai)
+- [Live Project](https://prabhat-ai.vercel.app)
 
----
+## 📄 License
 
-## ðŸ“„ License
-
-Add a license if you intend to distribute or reuse this project under specific terms. No license is specified here.
+Check the repository's license before reusing or redistributing this project. Unless a license is added, no general permission to reuse the code is granted by this README.
