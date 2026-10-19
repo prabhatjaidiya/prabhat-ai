@@ -171,7 +171,7 @@ const seedProfile = async (): Promise<void> => {
                 title: "ShopSphere",
 
                 description:
-                    "A full-stack e-commerce platform in development. Uses React, TypeScript, Tailwind CSS, Node.js, Express, MongoDB, and Mongoose. Implemented product browsing, authentication, role-based access, cart and wishlist, checkout, order management, customer order pages, and Razorpay payment gateway integration. Day 18 of the 28-day roadmap is complete. Next: Day 19.",
+                    "A full-stack e-commerce platform built with React, TypeScript, Tailwind CSS, Node.js, Express, MongoDB, and Mongoose. Features include product browsing, authentication, role-based access, cart and wishlist, checkout, order management, customer order pages, and Razorpay payment gateway integration. Day 19 of the 28-day roadmap is complete. Next: Day 20 — Admin Order Management.",
                 technologies: [
                     "React",
                     "TypeScript",
@@ -193,7 +193,7 @@ const seedProfile = async (): Promise<void> => {
             {
                 title: "Prabhat AI",
                 description:
-                    "A deployed personal AI agent representing Prabhat Jaidiya, built with TypeScript, Node.js, MongoDB, and the Google Gemini API. Features include structured knowledge retrieval, embeddings, vector search, RAG, conversation memory, document processing, GitHub integration, learning progress retrieval, context-aware responses, security guardrails, agent testing, and a professional chat interface. The frontend is deployed on Vercel and the backend on Render. Day 26 — Deployment — is complete. Currently working on Day 27 — Portfolio Polish. Day 28 — Final QA + README — remains.",
+                    "A deployed personal AI agent representing Prabhat Jaidiya, built with TypeScript, Node.js, MongoDB, and the Google Gemini API. Features include structured knowledge retrieval, embeddings, vector search, RAG, conversation memory, document processing, GitHub integration, learning progress retrieval, context-aware responses, security guardrails, agent testing, a professional chat interface, portfolio integration, GitHub live data, security improvements, and deployment. The frontend is deployed on Vercel and the backend on Render. All 28 days of the project roadmap are complete, including final QA and README documentation.",
                 technologies: [
                     "TypeScript",
                     "Node.js",
@@ -243,16 +243,16 @@ const seedProfile = async (): Promise<void> => {
             {
                 topic: "ShopSphere",
                 description:
-                    "A 28-day full-stack e-commerce project using React, TypeScript, Tailwind CSS, Node.js, Express, MongoDB, and Mongoose. Completed product listing and details, product APIs, authentication, role-based authorization, cart and wishlist functionality, frontend-backend integration, checkout, order management, customer order pages, and Razorpay payment gateway integration. Day 18 — Payment Gateway Integration — is complete. Next: Day 19 of 28.",
+                    "A 28-day full-stack e-commerce project using React, TypeScript, Tailwind CSS, Node.js, Express, MongoDB, and Mongoose. Completed product listing and details, product APIs, authentication, role-based authorization, cart and wishlist functionality, frontend-backend integration, checkout, order management, customer order pages, Razorpay payment gateway integration, and admin product management. Day 19 is complete. Next: Day 20 — Admin Order Management.",
                 status: "In Progress",
-                progress: 64.29,
+                progress: 67.86,
             },
             {
                 topic: "Prabhat AI",
                 description:
-                    "A 28-day project-based learning journey to build and deploy a personal AI agent using TypeScript, Node.js, MongoDB, and the Google Gemini API. Completed structured knowledge retrieval, system instructions, embeddings, vector search, RAG, retrieval accuracy improvements, conversation memory, document processing, GitHub integration, learning progress, context-aware responses, security guardrails, agent testing, professional chat UI, portfolio integration, GitHub live data, security audit, and deployment. The frontend is deployed on Vercel and the backend on Render. Days 1–26 are complete. Day 27 — Portfolio Polish — is currently in progress. Next: Day 28 — Final QA + README.",
-                status: "In Progress",
-                progress: 92.86,
+                    "A completed 28-day project-based learning journey to build and deploy a personal AI agent using TypeScript, Node.js, MongoDB, and the Google Gemini API. Completed structured knowledge retrieval, embeddings, vector search, RAG, conversation memory, document processing, GitHub integration, learning progress retrieval, context-aware responses, security guardrails, agent testing, professional chat UI, portfolio integration, GitHub live data, security improvements, deployment, portfolio polish, final QA, and README documentation. The frontend is deployed on Vercel and the backend on Render. All 28 days are complete.",
+                status: "Completed",
+                progress: 100,
             },
         ];
 
